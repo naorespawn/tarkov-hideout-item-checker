@@ -21,15 +21,39 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
 
   useEffect(() => {
     const loadIcons = async () => {
-      const allItemNames = new Set<string>();
+      const iconMap = new Map<string, ItemIcon>();
+      
+      // First, check if we have iconLinks from API data
       module.levels.forEach(level => {
         level.requirements.forEach(req => {
-          allItemNames.add(req.item);
+          if (req.iconLink) {
+            iconMap.set(req.item, {
+              name: req.item,
+              iconUrl: req.iconLink,
+              wikiLink: `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(req.item.replace(/ /g, '_'))}`
+            });
+          }
         });
       });
 
-      const icons = await TarkovApiService.getMultipleItemIcons(Array.from(allItemNames));
-      setItemIcons(icons);
+      // For items without iconLinks, fetch from API
+      const missingIcons = new Set<string>();
+      module.levels.forEach(level => {
+        level.requirements.forEach(req => {
+          if (!iconMap.has(req.item)) {
+            missingIcons.add(req.item);
+          }
+        });
+      });
+
+      if (missingIcons.size > 0) {
+        const additionalIcons = await TarkovApiService.getMultipleItemIcons(Array.from(missingIcons));
+        additionalIcons.forEach((icon, name) => {
+          iconMap.set(name, icon);
+        });
+      }
+
+      setItemIcons(iconMap);
       setLoading(false);
     };
 

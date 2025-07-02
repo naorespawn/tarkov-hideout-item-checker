@@ -1,11 +1,34 @@
-import React from 'react';
-import { hideoutModules } from '../data/hideoutDataNew';
+import React, { useState, useEffect } from 'react';
 import { HideoutModule } from './HideoutModule';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { UserProgress } from '../types/hideout';
+import { HideoutModule as HideoutModuleType, UserProgress } from '../types/hideout';
+import { HideoutDataService } from '../services/hideoutDataService';
+import { hideoutModules as fallbackData } from '../data/hideoutDataNew';
 
 export const HideoutTracker: React.FC = () => {
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>('hideout-progress', {});
+  const [hideoutModules, setHideoutModules] = useState<HideoutModuleType[]>(fallbackData);
+  const [loading, setLoading] = useState(true);
+  const [dataSource, setDataSource] = useState<'api' | 'fallback' | 'cache'>('fallback');
+
+  useEffect(() => {
+    const loadHideoutData = async () => {
+      try {
+        setLoading(true);
+        const data = await HideoutDataService.getCachedOrFreshData();
+        setHideoutModules(data);
+        setDataSource('api');
+      } catch (error) {
+        console.error('Failed to load hideout data, using fallback:', error);
+        setHideoutModules(fallbackData);
+        setDataSource('fallback');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadHideoutData();
+  }, []);
 
   const handleLevelChange = (moduleId: string, level: number) => {
     setUserProgress((prev: UserProgress) => ({
@@ -17,6 +40,24 @@ export const HideoutTracker: React.FC = () => {
   const resetProgress = () => {
     if (window.confirm('全ての進捗をリセットしますか？')) {
       setUserProgress({});
+    }
+  };
+
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      localStorage.removeItem('hideout-data');
+      localStorage.removeItem('hideout-data-timestamp');
+      const data = await HideoutDataService.fetchLatestHideoutData();
+      setHideoutModules(data);
+      setDataSource('api');
+      localStorage.setItem('hideout-data', JSON.stringify(data));
+      localStorage.setItem('hideout-data-timestamp', Date.now().toString());
+    } catch (error) {
+      console.error('Failed to refresh data:', error);
+      alert('データの更新に失敗しました。インターネット接続を確認してください。');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,27 +73,57 @@ export const HideoutTracker: React.FC = () => {
         <p className="text-gray-500 mb-4">
           各施設のレベルを設定して、必要な素材を確認しましょう
         </p>
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-          <p className="text-green-800 text-sm">
-            <strong>✅ 完了:</strong> 全てのHideoutモジュールのデータが公式Wikiに基づいて実装されました。
-            最新の正確な情報については
-            <a 
-              href="https://escapefromtarkov.fandom.com/wiki/Hideout" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-green-600 hover:underline ml-1"
-            >
-              公式Wiki
-            </a>
-            をご確認ください。
+        <div className={`border rounded-lg p-4 mb-6 ${
+          loading ? 'bg-yellow-50 border-yellow-200' : 
+          dataSource === 'api' ? 'bg-green-50 border-green-200' : 
+          'bg-blue-50 border-blue-200'
+        }`}>
+          <p className={`text-sm ${
+            loading ? 'text-yellow-800' : 
+            dataSource === 'api' ? 'text-green-800' : 
+            'text-blue-800'
+          }`}>
+            {loading ? (
+              <>
+                <strong>⏳ 読み込み中:</strong> tarkov.dev APIから最新データを取得しています...
+              </>
+            ) : dataSource === 'api' ? (
+              <>
+                <strong>✅ 最新データ:</strong> tarkov.dev APIから最新のHideoutデータを取得済み。
+                データは24時間キャッシュされます。
+              </>
+            ) : (
+              <>
+                <strong>⚠️ フォールバック:</strong> APIが利用できないため、内蔵データを使用中。
+                最新情報は
+                <a 
+                  href="https://tarkov.dev/hideout" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline ml-1"
+                >
+                  tarkov.dev
+                </a>
+                でご確認ください。
+              </>
+            )}
           </p>
         </div>
-        <button
-          onClick={resetProgress}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
-        >
-          進捗をリセット
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={refreshData}
+            disabled={loading}
+            className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-4 py-2 rounded transition-colors"
+          >
+            {loading ? '更新中...' : 'データを更新'}
+          </button>
+          <button
+            onClick={resetProgress}
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
+          >
+            進捗をリセット
+          </button>
+        </div>
       </header>
 
       <div className="max-w-6xl mx-auto">

@@ -17,6 +17,7 @@ export interface Requirement {
   item: string;
   count: number;
   nonFunctional?: boolean;
+  iconLink?: string;
 }
 
 export interface ModulePrerequisite {
