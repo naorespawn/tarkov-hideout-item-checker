@@ -18,7 +18,6 @@ export class TarkovApiService {
     'Cord': 'Paracord',
     'Nails': 'Pack of nails',
     'Measuring tape': 'Construction measuring tape',
-    'Duct tape': 'KEKTAPE duct tape',
     'Matches': 'Hunting matches',
     'Pliers': 'Pliers',
     'Bundle of wires': 'Wires',
@@ -82,7 +81,16 @@ export class TarkovApiService {
     const iconMap = new Map<string, ItemIcon>();
     
     try {
-      const mappedNames = itemNames.map(name => this.mapItemName(name));
+      // Create mapping of original names to mapped names
+      const nameMapping = new Map<string, string>();
+      const uniqueMappedNames = new Set<string>();
+      
+      itemNames.forEach(originalName => {
+        const mappedName = this.mapItemName(originalName);
+        nameMapping.set(mappedName, originalName);
+        uniqueMappedNames.add(mappedName);
+      });
+      
       const query = `
         query GetItems($names: [String!]!) {
           items(names: $names) {
@@ -95,18 +103,19 @@ export class TarkovApiService {
       
       const response = await axios.post(this.API_BASE, {
         query,
-        variables: { names: mappedNames }
+        variables: { names: Array.from(uniqueMappedNames) }
       });
       
       const items: TarkovDevItem[] = response.data.data.items || [];
       items.forEach(item => {
-        // Find the original name that corresponds to this mapped name
-        const originalName = itemNames.find(name => this.mapItemName(name) === item.name) || item.name;
-        iconMap.set(originalName, {
-          name: item.name,
-          iconUrl: item.iconLink,
-          wikiLink: `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(originalName.replace(/ /g, '_'))}`
-        });
+        const originalName = nameMapping.get(item.name);
+        if (originalName) {
+          iconMap.set(originalName, {
+            name: item.name,
+            iconUrl: item.iconLink,
+            wikiLink: `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(originalName.replace(/ /g, '_'))}`
+          });
+        }
       });
       
       return iconMap;
