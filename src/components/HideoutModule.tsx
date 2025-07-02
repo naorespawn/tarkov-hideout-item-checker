@@ -43,9 +43,13 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
     }
   };
 
-  const getNextRequiredItems = () => {
+  const getNextLevelData = () => {
     const nextLevel = currentLevel + 1;
-    const nextLevelData = module.levels.find(l => l.level === nextLevel);
+    return module.levels.find(l => l.level === nextLevel);
+  };
+
+  const getNextRequiredItems = () => {
+    const nextLevelData = getNextLevelData();
     return nextLevelData ? nextLevelData.requirements : [];
   };
 
@@ -85,11 +89,55 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         </div>
       </div>
 
-      {currentLevel < maxLevel && nextRequirements.length > 0 && (
+      {currentLevel < maxLevel && (getNextLevelData() || nextRequirements.length > 0) && (
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-3">
             レベル {currentLevel} → {currentLevel + 1} に必要な素材
           </h3>
+          
+          {getNextLevelData()?.roubles && (
+            <div className="mb-3 p-3 bg-yellow-50 rounded-lg">
+              <span className="font-medium text-yellow-800">
+                💰 {getNextLevelData()!.roubles!.toLocaleString()} ルーブル
+              </span>
+            </div>
+          )}
+
+          {getNextLevelData()?.modulePrerequisites && getNextLevelData()!.modulePrerequisites!.length > 0 && (
+            <div className="mb-3 p-3 bg-orange-50 rounded-lg">
+              <span className="font-medium text-orange-800">前提条件: </span>
+              {getNextLevelData()!.modulePrerequisites!.map((prereq, index) => (
+                <span key={index} className="text-orange-700">
+                  {prereq.module} レベル{prereq.level}
+                  {index < getNextLevelData()!.modulePrerequisites!.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {getNextLevelData()?.traderRequirements && getNextLevelData()!.traderRequirements!.length > 0 && (
+            <div className="mb-3 p-3 bg-purple-50 rounded-lg">
+              <span className="font-medium text-purple-800">商人要件: </span>
+              {getNextLevelData()!.traderRequirements!.map((trader, index) => (
+                <span key={index} className="text-purple-700">
+                  {trader.trader} LL{trader.level}
+                  {index < getNextLevelData()!.traderRequirements!.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {getNextLevelData()?.skillRequirements && getNextLevelData()!.skillRequirements!.length > 0 && (
+            <div className="mb-3 p-3 bg-green-50 rounded-lg">
+              <span className="font-medium text-green-800">スキル要件: </span>
+              {getNextLevelData()!.skillRequirements!.map((skill, index) => (
+                <span key={index} className="text-green-700">
+                  {skill.skill} レベル{skill.level}
+                  {index < getNextLevelData()!.skillRequirements!.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {nextRequirements.map((req, index) => {
               const icon = itemIcons.get(req.item);

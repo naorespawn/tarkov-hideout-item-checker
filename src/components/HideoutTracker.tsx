@@ -1,5 +1,5 @@
 import React from 'react';
-import { hideoutModules } from '../data/hideoutData';
+import { hideoutModules } from '../data/hideoutDataNew';
 import { HideoutModule } from './HideoutModule';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { UserProgress } from '../types/hideout';
@@ -29,9 +29,24 @@ export const HideoutTracker: React.FC = () => {
         <h2 className="text-2xl font-semibold text-gray-600 mb-4">
           Hideout アイテムチェッカー
         </h2>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-500 mb-4">
           各施設のレベルを設定して、必要な素材を確認しましょう
         </p>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <p className="text-blue-800 text-sm">
+            <strong>⚠️ 注意:</strong> このデータは公式Wikiに基づいて更新されていますが、
+            一部のモジュールは準備中です。正確な情報は
+            <a 
+              href="https://escapefromtarkov.fandom.com/wiki/Hideout" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline ml-1"
+            >
+              公式Wiki
+            </a>
+            でご確認ください。
+          </p>
+        </div>
         <button
           onClick={resetProgress}
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
