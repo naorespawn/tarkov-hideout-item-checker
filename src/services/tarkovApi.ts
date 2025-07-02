@@ -20,7 +20,6 @@ export class TarkovApiService {
     'Measuring tape': 'Construction measuring tape',
     'Matches': 'Hunting matches',
     'Pliers': 'Pliers',
-    'Bundle of wires': 'Wires',
     'Insulating tape': 'Insulating tape',
     'Military corrugated tube': 'Corrugated hose',
     'VPX Flash Storage Module': 'VPX flash storage module',
