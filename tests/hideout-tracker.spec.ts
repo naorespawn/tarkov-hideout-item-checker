@@ -20,22 +20,37 @@ test.describe('Hideout Tracker', () => {
     expect(moduleCount).toBeGreaterThan(15);
   });
 
-  test('should allow changing module levels', async ({ page }) => {
-    // Find the first module with a level selector
-    const firstLevelSelect = page.locator('select').first();
-    await expect(firstLevelSelect).toBeVisible();
+  test('should allow changing module levels with buttons', async ({ page }) => {
+    // Find the first module's level controls
+    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
+    const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
+    const decreaseButton = firstModuleCard.locator('button[title="レベルを下げる"]');
+    const levelDisplay = firstModuleCard.locator('span.font-semibold');
     
-    // Change the level
-    await firstLevelSelect.selectOption('1');
+    await expect(increaseButton).toBeVisible();
+    await expect(decreaseButton).toBeVisible();
     
-    // Verify the selection was made
-    await expect(firstLevelSelect).toHaveValue('1');
+    // Initially should be at level 0
+    await expect(levelDisplay).toHaveText('0');
+    await expect(decreaseButton).toBeDisabled();
+    
+    // Increase level
+    await increaseButton.click();
+    await expect(levelDisplay).toHaveText('1');
+    await expect(decreaseButton).toBeEnabled();
+    
+    // Decrease level back to 0
+    await decreaseButton.click();
+    await expect(levelDisplay).toHaveText('0');
+    await expect(decreaseButton).toBeDisabled();
   });
 
   test('should display required items when level is selected', async ({ page }) => {
-    // Select level 1 for the first module
-    const firstLevelSelect = page.locator('select').first();
-    await firstLevelSelect.selectOption('1');
+    // Use button to increase level for the first module
+    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
+    const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
+    
+    await increaseButton.click();
     
     // Wait for requirements to appear
     await expect(page.locator('text=に必要な素材').first()).toBeVisible();
@@ -46,24 +61,35 @@ test.describe('Hideout Tracker', () => {
   });
 
   test('should persist level selection after page reload', async ({ page }) => {
-    // Select level 2 for the first module
-    const firstLevelSelect = page.locator('select').first();
-    await firstLevelSelect.selectOption('2');
+    // Use button to set level 2 for the first module
+    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
+    const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
+    const levelDisplay = firstModuleCard.locator('span.font-semibold');
+    
+    // Increase to level 2
+    await increaseButton.click();
+    await increaseButton.click();
+    await expect(levelDisplay).toHaveText('2');
     
     // Reload the page
     await page.reload();
     
     // Verify the selection persists
-    await expect(firstLevelSelect).toHaveValue('2');
+    const reloadedLevelDisplay = page.locator('.bg-white.rounded-lg.shadow-md').first().locator('span.font-semibold');
+    await expect(reloadedLevelDisplay).toHaveText('2');
   });
 
   test('should show reset button and functionality', async ({ page }) => {
     const resetButton = page.locator('button:has-text(\"進捗をリセット\")');
     await expect(resetButton).toBeVisible();
     
-    // Select a level first
-    const firstLevelSelect = page.locator('select').first();
-    await firstLevelSelect.selectOption('1');
+    // Set a level first using button
+    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
+    const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
+    const levelDisplay = firstModuleCard.locator('span.font-semibold');
+    
+    await increaseButton.click();
+    await expect(levelDisplay).toHaveText('1');
     
     // Mock the confirm dialog to return true
     page.on('dialog', dialog => dialog.accept());
@@ -72,25 +98,32 @@ test.describe('Hideout Tracker', () => {
     await resetButton.click();
     
     // Verify level was reset to 0
-    await expect(firstLevelSelect).toHaveValue('0');
+    await expect(levelDisplay).toHaveText('0');
   });
 
   test('should display future requirements section', async ({ page }) => {
-    // Select level 1 for a module that has multiple levels
-    const generatorSelect = page.locator('text=Generator').locator('..').locator('select');
-    await generatorSelect.selectOption('1');
+    // Find Generator module and increase its level
+    const generatorCard = page.locator('text=Generator').locator('..');
+    const increaseButton = generatorCard.locator('button[title="レベルを上げる"]');
+    
+    await increaseButton.click();
     
     // Check if future requirements section appears
     await expect(page.locator('text=今後必要になる素材')).toBeVisible();
   });
 
   test('should show completed status for max level modules', async ({ page }) => {
-    // Find a module with max level and set it
-    const shootingRangeSelect = page.locator('text=Shooting range').locator('..').locator('select');
-    await shootingRangeSelect.selectOption('1');
+    // Find Shooting range module and increase to max level
+    const shootingRangeCard = page.locator('text=Shooting range').locator('..');
+    const increaseButton = shootingRangeCard.locator('button[title="レベルを上げる"]');
+    
+    await increaseButton.click();
     
     // Check if completed status is shown
     await expect(page.locator('text=最大レベルに達しています')).toBeVisible();
+    
+    // Verify increase button is disabled at max level
+    await expect(increaseButton).toBeDisabled();
   });
 
   test('should be responsive on mobile devices', async ({ page }) => {

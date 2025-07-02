@@ -70,22 +70,33 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
         <h2 className="text-xl font-bold text-gray-800">{module.name}</h2>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-600">現在レベル:</span>
-          <select
-            value={currentLevel}
-            onChange={(e) => onLevelChange(module.id, parseInt(e.target.value))}
-            className="border border-gray-300 rounded px-2 py-1 text-sm"
-          >
-            <option value={0}>0</option>
-            {module.levels.map(level => (
-              <option key={level.level} value={level.level}>
-                {level.level}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center space-x-3">
+          <span className="text-sm text-gray-600 hidden sm:inline">現在レベル:</span>
+          <span className="text-sm text-gray-600 sm:hidden">レベル:</span>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => onLevelChange(module.id, Math.max(0, currentLevel - 1))}
+              disabled={currentLevel <= 0}
+              className="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-lg sm:text-base"
+              title="レベルを下げる"
+            >
+              −
+            </button>
+            <span className="text-xl sm:text-lg font-semibold text-gray-800 min-w-[2.5rem] sm:min-w-[2rem] text-center">
+              {currentLevel}
+            </span>
+            <button
+              onClick={() => onLevelChange(module.id, Math.min(maxLevel, currentLevel + 1))}
+              disabled={currentLevel >= maxLevel}
+              className="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-green-500 text-white font-bold hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-lg sm:text-base"
+              title="レベルを上げる"
+            >
+              +
+            </button>
+          </div>
+          <span className="text-sm sm:text-xs text-gray-500">/ {maxLevel}</span>
         </div>
       </div>
 
