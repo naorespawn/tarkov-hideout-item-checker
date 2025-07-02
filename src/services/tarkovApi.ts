@@ -17,7 +17,26 @@ export class TarkovApiService {
     'Thermometer': 'Analog thermometer',
     'Cord': 'Paracord',
     'Nails': 'Pack of nails',
-    'Measuring tape': 'Construction measuring tape'
+    'Measuring tape': 'Construction measuring tape',
+    'Duct tape': 'KEKTAPE duct tape',
+    'Matches': 'Hunting matches',
+    'Pliers': 'Pliers',
+    'Bundle of wires': 'Wires',
+    'Insulating tape': 'Insulating tape',
+    'Military corrugated tube': 'Corrugated hose',
+    'VPX Flash Storage Module': 'VPX flash storage module',
+    'T-Shaped plug': 'T-shaped plug',
+    'Pipe grip wrench': 'Pipe gripping wrench',
+    'Ratchet wrench': 'Ratchet wrench',
+    'Shustrilo sealing foam': 'Shustrilo sealing foam',
+    'WD-40 (100ml)': 'WD-40 (100ml)',
+    'TP-200 TNT brick': 'TP-200 TNT brick',
+    'NIXXOR lens': 'NIXXOR lens',
+    'Working LCD': 'Working LCD',
+    'SSD drive': 'SSD drive',
+    'Analgin painkillers': 'Analgin painkillers',
+    'Army bandage': 'Army bandage',
+    'Bulbex cable cutter': 'Bulbex cable cutter'
   };
   
   private static mapItemName(itemName: string): string {

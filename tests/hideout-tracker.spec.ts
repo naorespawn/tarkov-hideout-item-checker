@@ -15,9 +15,9 @@ test.describe('Hideout Tracker', () => {
     // Wait for modules to load
     await expect(page.locator('.bg-white.rounded-lg.shadow-md').first()).toBeVisible();
     
-    // Check if at least some modules are displayed
+    // Check if all modules are displayed (should be 18 total modules)
     const moduleCount = await page.locator('.bg-white.rounded-lg.shadow-md').count();
-    expect(moduleCount).toBeGreaterThan(5);
+    expect(moduleCount).toBeGreaterThan(15);
   });
 
   test('should allow changing module levels', async ({ page }) => {

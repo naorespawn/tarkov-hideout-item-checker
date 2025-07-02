@@ -32,19 +32,19 @@ export const HideoutTracker: React.FC = () => {
         <p className="text-gray-500 mb-4">
           各施設のレベルを設定して、必要な素材を確認しましょう
         </p>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <p className="text-blue-800 text-sm">
-            <strong>⚠️ 注意:</strong> このデータは公式Wikiに基づいて更新されていますが、
-            一部のモジュールは準備中です。正確な情報は
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+          <p className="text-green-800 text-sm">
+            <strong>✅ 完了:</strong> 全てのHideoutモジュールのデータが公式Wikiに基づいて実装されました。
+            最新の正確な情報については
             <a 
               href="https://escapefromtarkov.fandom.com/wiki/Hideout" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline ml-1"
+              className="text-green-600 hover:underline ml-1"
             >
               公式Wiki
             </a>
-            でご確認ください。
+            をご確認ください。
           </p>
         </div>
         <button
