@@ -47,11 +47,6 @@ export const HideoutTracker: React.FC = () => {
   };
 
   const isModuleAvailable = (module: HideoutModuleType): boolean => {
-    // First check PMC level requirements
-    if (!TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)) {
-      return false;
-    }
-    
     // Convert userProgress (by moduleId) to progress by module name
     const userProgressByName: { [moduleName: string]: number } = {};
     Object.entries(userProgress).forEach(([moduleId, level]) => {
@@ -82,11 +77,6 @@ export const HideoutTracker: React.FC = () => {
   };
 
   const filteredModules = hideoutModules.filter(module => {
-    // First check if module is available
-    if (!isModuleAvailable(module)) {
-      return false;
-    }
-    
     // If showCompleted is false, hide completed modules
     if (!showCompleted && isModuleCompleted(module)) {
       return false;

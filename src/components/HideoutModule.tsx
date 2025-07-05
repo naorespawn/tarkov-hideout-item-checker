@@ -29,6 +29,34 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
     level.level > currentLevel && !TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)
   );
 
+  // 施設が利用可能かどうかをチェック（前提条件を含む）
+  const isModuleAccessible = (): boolean => {
+    // PMC レベル制限をチェック
+    if (!TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)) {
+      return false;
+    }
+    
+    // Convert userProgress (by moduleId) to progress by module name
+    const userProgressByName: { [moduleName: string]: number } = {};
+    Object.entries(userProgress).forEach(([moduleId, level]) => {
+      const matchingModule = allModules.find(m => m.id === moduleId);
+      if (matchingModule) {
+        userProgressByName[matchingModule.name] = level;
+      }
+    });
+    
+    // 既に最大レベルの場合はアクセス可能
+    if (currentLevel >= maxLevel) {
+      return true;
+    }
+    
+    // 次のレベルが建設可能かチェック
+    const nextLevel = currentLevel + 1;
+    return HideoutPrerequisiteService.isStationLevelAvailable(module.name, nextLevel, userProgressByName);
+  };
+
+  const moduleAccessible = isModuleAccessible();
+
   const getItemIconData = (itemName: string): ItemIcon | null => {
     // First check if we have iconLink from API data
     const levelWithIcon = module.levels.find(level => 
@@ -145,7 +173,13 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
   const futureRequirements = getFutureRequiredItems();
 
   return (
-    <div className={`rounded-lg shadow-md p-6 mb-6 ${hasFuturePMCRestrictions ? 'bg-orange-50 border border-orange-200' : 'bg-white'}`}>
+    <div className={`rounded-lg shadow-md p-6 mb-6 transition-opacity ${
+      !moduleAccessible 
+        ? 'bg-gray-100 border border-gray-300 opacity-50' 
+        : hasFuturePMCRestrictions 
+          ? 'bg-orange-50 border border-orange-200' 
+          : 'bg-white'
+    }`}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
         <div className="flex items-center space-x-3">
           <h2 className="text-xl font-bold text-gray-800">{module.name}</h2>
@@ -198,7 +232,15 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         </div>
       </div>
 
-      {hasFuturePMCRestrictions && (
+      {!moduleAccessible && (
+        <div className="mb-4 p-3 bg-gray-200 rounded-lg">
+          <p className="text-sm text-gray-700">
+            🔒 この施設は現在のPMCレベル({pmcLevel})または前提条件を満たしていないため利用できません。
+          </p>
+        </div>
+      )}
+
+      {moduleAccessible && hasFuturePMCRestrictions && (
         <div className="mb-4 p-3 bg-orange-100 rounded-lg">
           <p className="text-sm text-orange-800">
             ⚠️ この施設の一部のレベルには現在のPMCレベル({pmcLevel})では利用できないトレーダーレベルが必要です。
@@ -206,7 +248,7 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         </div>
       )}
 
-      {!isCollapsed && currentLevel < maxLevel && (getNextLevelData() || nextRequirements.length > 0) && (
+      {!isCollapsed && moduleAccessible && currentLevel < maxLevel && (getNextLevelData() || nextRequirements.length > 0) && (
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-3">
             レベル {currentLevel} → {currentLevel + 1} に必要な素材
@@ -276,13 +318,13 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         </div>
       )}
 
-      {!isCollapsed && currentLevel >= maxLevel && (
+      {!isCollapsed && moduleAccessible && currentLevel >= maxLevel && (
         <div className="mb-6 p-4 bg-green-100 rounded-lg">
           <p className="text-green-800 font-medium">✓ 最大レベルに達しています</p>
         </div>
       )}
 
-      {!isCollapsed && futureRequirements.length > 0 && (
+      {!isCollapsed && moduleAccessible && futureRequirements.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-gray-600 mb-3">
             今後必要になる素材 (レベル {currentLevel + 2}+)
