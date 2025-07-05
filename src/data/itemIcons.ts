@@ -611,6 +611,36 @@ export const itemIcons: { [key: string]: ItemIcon } = {
     "name": "Bottle of OLOLO Multivitamins",
     "iconUrl": "https://assets.tarkov.dev/62a0a043cf4a99369e2624a5-icon.webp",
     "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Bottle_of_OLOLO_Multivitamins"
+  },
+  "Matches": {
+    "name": "Hunting matches",
+    "iconUrl": "https://assets.tarkov.dev/590dde5786f77405e71908b2-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Hunting_matches"
+  },
+  "Moonshine": {
+    "name": "Moonshine",
+    "iconUrl": "https://assets.tarkov.dev/5d1b371186f774253763a656-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Moonshine"
+  },
+  "Pliers": {
+    "name": "Pliers",
+    "iconUrl": "https://assets.tarkov.dev/590de71386f774347051a052-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Pliers"
+  },
+  "Processor": {
+    "name": "Processor",
+    "iconUrl": "https://assets.tarkov.dev/5734770f24597738025ee254-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Processor"
+  },
+  "RAM": {
+    "name": "RAM",
+    "iconUrl": "https://assets.tarkov.dev/5734773724597737fd047c14-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/RAM"
+  },
+  "Graphics card": {
+    "name": "Graphics card",
+    "iconUrl": "https://assets.tarkov.dev/57347ca924597744596b4e71-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Graphics_card"
   }
 };
 
