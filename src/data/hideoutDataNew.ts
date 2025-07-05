@@ -18,6 +18,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 75000,
         requirements: [
           { item: 'Bulbex cable cutter', count: 1 },
           { item: 'Phase control relay', count: 5 },
@@ -31,6 +32,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 150000,
         requirements: [
           { item: 'Power supply unit', count: 5 },
           { item: 'Phase control relay', count: 6 },
@@ -59,6 +61,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 50000,
         requirements: [
           { item: 'Metal spare parts', count: 2 },
           { item: 'CPU fan', count: 3 },
@@ -68,6 +71,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 100000,
         requirements: [
           { item: 'Printed circuit board', count: 5 },
           { item: 'Electric motor', count: 4 },
@@ -385,29 +389,44 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 10000,
         requirements: [
           { item: 'Screw nuts', count: 2 },
-          { item: 'Bolts', count: 2 }
+          { item: 'Bolts', count: 2 },
+          { item: 'Leatherman Multitool', count: 1 }
         ]
       },
       {
         level: 2,
+        roubles: 50000,
         requirements: [
+          { item: 'Bolts', count: 6 },
           { item: 'Toolset', count: 3 },
+          { item: 'Set of files "Master"', count: 1 },
           { item: 'Electric drill', count: 2 },
-          { item: 'Bolts', count: 6 }
+          { item: 'Weapon parts', count: 3 }
         ],
         modulePrerequisites: [
           { module: 'Illumination', level: 2 }
+        ],
+        traderRequirements: [
+          { trader: 'Mechanic', level: 2 }
         ]
       },
       {
         level: 3,
         roubles: 395000,
-        requirements: [],
+        requirements: [
+          { item: 'Pliers Elite', count: 2 },
+          { item: 'FireKlean gun lube', count: 1 },
+          { item: 'Can of thermite', count: 2 }
+        ],
         modulePrerequisites: [
           { module: 'Generator', level: 2 },
           { module: 'Stash', level: 2 }
+        ],
+        traderRequirements: [
+          { trader: 'Mechanic', level: 3 }
         ]
       }
     ]

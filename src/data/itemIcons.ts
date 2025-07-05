@@ -641,6 +641,26 @@ export const itemIcons: { [key: string]: ItemIcon } = {
     "name": "Graphics card",
     "iconUrl": "https://assets.tarkov.dev/57347ca924597744596b4e71-icon.webp",
     "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Graphics_card"
+  },
+  "Set of files \"Master\"": {
+    "name": "Set of files \"Master\"",
+    "iconUrl": "https://assets.tarkov.dev/590de7e986f7741b096e5f32-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Set_of_files_%22Master%22"
+  },
+  "Weapon parts": {
+    "name": "Weapon parts",
+    "iconUrl": "https://assets.tarkov.dev/57347d692459773085006f0a-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Weapon_parts"
+  },
+  "FireKlean gun lube": {
+    "name": "FireKlean gun lube",
+    "iconUrl": "https://assets.tarkov.dev/5d1b33a686f7742523398398-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/FireKlean_gun_lube"
+  },
+  "Can of thermite": {
+    "name": "Can of thermite",
+    "iconUrl": "https://assets.tarkov.dev/5e340dcdff7643219061ba8e-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Can_of_thermite"
   }
 };
 
