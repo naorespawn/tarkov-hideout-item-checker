@@ -1,67 +1,102 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { HideoutModule as HideoutModuleType, ItemIcon, UserProgress } from '../types/hideout';
-import { TarkovApiService } from '../services/tarkovApi';
+import { TraderLevelService } from '../services/traderLevelService';
+import { HideoutPrerequisiteService } from '../services/hideoutPrerequisiteService';
+import { getItemIcon } from '../data/itemIcons';
 
 interface HideoutModuleProps {
   module: HideoutModuleType;
   userProgress: UserProgress;
   onLevelChange: (moduleId: string, level: number) => void;
+  pmcLevel: number;
+  allModules: HideoutModuleType[];
 }
 
 export const HideoutModule: React.FC<HideoutModuleProps> = ({ 
   module, 
   userProgress, 
-  onLevelChange 
+  onLevelChange,
+  pmcLevel,
+  allModules
 }) => {
-  const [itemIcons, setItemIcons] = useState<Map<string, ItemIcon>>(new Map());
-  const [loading, setLoading] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   
   const currentLevel = userProgress[module.id] || 0;
   const maxLevel = Math.max(...module.levels.map(l => l.level));
 
-  useEffect(() => {
-    const loadIcons = async () => {
-      const iconMap = new Map<string, ItemIcon>();
-      
-      // First, check if we have iconLinks from API data
-      module.levels.forEach(level => {
-        level.requirements.forEach(req => {
-          if (req.iconLink) {
-            iconMap.set(req.item, {
-              name: req.item,
-              iconUrl: req.iconLink,
-              wikiLink: `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(req.item.replace(/ /g, '_'))}`
-            });
-          }
-        });
-      });
+  // 今後のレベルでPMCレベル制限があるかチェック
+  const hasFuturePMCRestrictions = module.levels.some(level => 
+    level.level > currentLevel && !TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)
+  );
 
-      // For items without iconLinks, fetch from API
-      const missingIcons = new Set<string>();
-      module.levels.forEach(level => {
-        level.requirements.forEach(req => {
-          if (!iconMap.has(req.item)) {
-            missingIcons.add(req.item);
-          }
-        });
-      });
-
-      if (missingIcons.size > 0) {
-        const additionalIcons = await TarkovApiService.getMultipleItemIcons(Array.from(missingIcons));
-        additionalIcons.forEach((icon, name) => {
-          iconMap.set(name, icon);
-        });
+  const getItemIconData = (itemName: string): ItemIcon | null => {
+    // First check if we have iconLink from API data
+    const levelWithIcon = module.levels.find(level => 
+      level.requirements.some(req => req.item === itemName && req.iconLink)
+    );
+    
+    if (levelWithIcon) {
+      const reqWithIcon = levelWithIcon.requirements.find(req => req.item === itemName && req.iconLink);
+      if (reqWithIcon?.iconLink) {
+        return {
+          name: itemName,
+          iconUrl: reqWithIcon.iconLink,
+          wikiLink: `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(itemName.replace(/ /g, '_'))}`
+        };
       }
+    }
+    
+    // Fall back to pre-fetched data
+    return getItemIcon(itemName);
+  };
 
-      setItemIcons(iconMap);
-      setLoading(false);
-    };
-
-    loadIcons();
-  }, [module]);
+  const canLevelUp = (): boolean => {
+    // Check if already at max level
+    if (currentLevel >= maxLevel) return false;
+    
+    const nextLevel = currentLevel + 1;
+    const nextLevelData = module.levels.find(l => l.level === nextLevel);
+    
+    if (!nextLevelData) return false;
+    
+    // Convert userProgress (by moduleId) to progress by module name for HideoutPrerequisiteService
+    const userProgressByName: { [moduleName: string]: number } = {};
+    Object.entries(userProgress).forEach(([moduleId, level]) => {
+      const matchingModule = allModules.find(m => m.id === moduleId);
+      if (matchingModule) {
+        userProgressByName[matchingModule.name] = level;
+      }
+    });
+    
+    // Check module prerequisites
+    if (nextLevelData.modulePrerequisites) {
+      for (const prereq of nextLevelData.modulePrerequisites) {
+        const currentPrereqLevel = userProgressByName[prereq.module] || 0;
+        if (currentPrereqLevel < prereq.level) {
+          return false;
+        }
+      }
+    }
+    
+    // Check trader requirements  
+    if (nextLevelData.traderRequirements) {
+      for (const traderReq of nextLevelData.traderRequirements) {
+        if (!TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)) {
+          return false;
+        }
+      }
+    }
+    
+    // Check PMC level restrictions for the station itself
+    if (!TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)) {
+      return false;
+    }
+    
+    return true;
+  };
 
   const handleIconClick = (itemName: string) => {
-    const icon = itemIcons.get(itemName);
+    const icon = getItemIconData(itemName);
     if (icon) {
       window.open(icon.wikiLink, '_blank');
     }
@@ -74,7 +109,19 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
 
   const getNextRequiredItems = () => {
     const nextLevelData = getNextLevelData();
-    return nextLevelData ? nextLevelData.requirements : [];
+    if (!nextLevelData) return [];
+    
+    const items = [...nextLevelData.requirements];
+    
+    // Add currency as items
+    if (nextLevelData.roubles) {
+      items.push({
+        item: 'Roubles',
+        count: nextLevelData.roubles
+      });
+    }
+    
+    return items;
   };
 
   const getFutureRequiredItems = () => {
@@ -85,6 +132,11 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         level.requirements.forEach(req => {
           items.set(req.item, (items.get(req.item) || 0) + req.count);
         });
+        
+        // Add currency to future requirements
+        if (level.roubles) {
+          items.set('Roubles', (items.get('Roubles') || 0) + level.roubles);
+        }
       });
     return Array.from(items.entries()).map(([item, count]) => ({ item, count }));
   };
@@ -93,9 +145,31 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
   const futureRequirements = getFutureRequiredItems();
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div className={`rounded-lg shadow-md p-6 mb-6 ${hasFuturePMCRestrictions ? 'bg-orange-50 border border-orange-200' : 'bg-white'}`}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
-        <h2 className="text-xl font-bold text-gray-800">{module.name}</h2>
+        <div className="flex items-center space-x-3">
+          <h2 className="text-xl font-bold text-gray-800">{module.name}</h2>
+          {hasFuturePMCRestrictions && (
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="p-1 rounded text-orange-600 hover:text-orange-800 transition-colors"
+                title={isCollapsed ? "詳細を表示" : "詳細を非表示"}
+              >
+                {isCollapsed ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                )}
+              </button>
+              <span className="text-sm text-orange-600 font-medium">PMCレベル制限あり</span>
+            </div>
+          )}
+        </div>
         <div className="flex items-center space-x-3">
           <span className="text-sm text-gray-600 hidden sm:inline">現在レベル:</span>
           <span className="text-sm text-gray-600 sm:hidden">レベル:</span>
@@ -113,9 +187,9 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
             </span>
             <button
               onClick={() => onLevelChange(module.id, Math.min(maxLevel, currentLevel + 1))}
-              disabled={currentLevel >= maxLevel}
+              disabled={!canLevelUp()}
               className="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-green-500 text-white font-bold hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-lg sm:text-base"
-              title="レベルを上げる"
+              title={!canLevelUp() && currentLevel < maxLevel ? "前提条件を満たしていません" : "レベルを上げる"}
             >
               +
             </button>
@@ -124,19 +198,20 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         </div>
       </div>
 
-      {currentLevel < maxLevel && (getNextLevelData() || nextRequirements.length > 0) && (
+      {hasFuturePMCRestrictions && (
+        <div className="mb-4 p-3 bg-orange-100 rounded-lg">
+          <p className="text-sm text-orange-800">
+            ⚠️ この施設の一部のレベルには現在のPMCレベル({pmcLevel})では利用できないトレーダーレベルが必要です。
+          </p>
+        </div>
+      )}
+
+      {!isCollapsed && currentLevel < maxLevel && (getNextLevelData() || nextRequirements.length > 0) && (
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-3">
             レベル {currentLevel} → {currentLevel + 1} に必要な素材
           </h3>
           
-          {getNextLevelData()?.roubles && (
-            <div className="mb-3 p-3 bg-yellow-50 rounded-lg">
-              <span className="font-medium text-yellow-800">
-                💰 {getNextLevelData()!.roubles!.toLocaleString()} ルーブル
-              </span>
-            </div>
-          )}
 
           {getNextLevelData()?.modulePrerequisites && getNextLevelData()!.modulePrerequisites!.length > 0 && (
             <div className="mb-3 p-3 bg-orange-50 rounded-lg">
@@ -152,7 +227,7 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
 
           {getNextLevelData()?.traderRequirements && getNextLevelData()!.traderRequirements!.length > 0 && (
             <div className="mb-3 p-3 bg-purple-50 rounded-lg">
-              <span className="font-medium text-purple-800">商人要件: </span>
+              <span className="font-medium text-purple-800">トレーダー条件: </span>
               {getNextLevelData()!.traderRequirements!.map((trader, index) => (
                 <span key={index} className="text-purple-700">
                   {trader.trader} LL{trader.level}
@@ -164,7 +239,7 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
 
           {getNextLevelData()?.skillRequirements && getNextLevelData()!.skillRequirements!.length > 0 && (
             <div className="mb-3 p-3 bg-green-50 rounded-lg">
-              <span className="font-medium text-green-800">スキル要件: </span>
+              <span className="font-medium text-green-800">スキル条件: </span>
               {getNextLevelData()!.skillRequirements!.map((skill, index) => (
                 <span key={index} className="text-green-700">
                   {skill.skill} レベル{skill.level}
@@ -173,14 +248,12 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
               ))}
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-6 gap-2">
             {nextRequirements.map((req, index) => {
-              const icon = itemIcons.get(req.item);
+              const icon = getItemIconData(req.item);
               return (
-                <div key={index} className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                  {loading ? (
-                    <div className="w-12 h-12 bg-gray-200 rounded animate-pulse"></div>
-                  ) : icon ? (
+                <div key={index} className="flex flex-col items-center space-y-1 p-2 bg-blue-50 rounded-lg">
+                  {icon ? (
                     <img
                       src={icon.iconUrl}
                       alt={req.item}
@@ -194,7 +267,6 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-gray-800">{req.item}</p>
                     <p className="text-sm text-gray-600">× {req.count}</p>
                   </div>
                 </div>
@@ -204,25 +276,23 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         </div>
       )}
 
-      {currentLevel >= maxLevel && (
+      {!isCollapsed && currentLevel >= maxLevel && (
         <div className="mb-6 p-4 bg-green-100 rounded-lg">
           <p className="text-green-800 font-medium">✓ 最大レベルに達しています</p>
         </div>
       )}
 
-      {futureRequirements.length > 0 && (
+      {!isCollapsed && futureRequirements.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-gray-600 mb-3">
             今後必要になる素材 (レベル {currentLevel + 2}+)
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+          <div className="grid grid-cols-6 gap-2">
             {futureRequirements.map((req, index) => {
-              const icon = itemIcons.get(req.item);
+              const icon = getItemIconData(req.item);
               return (
-                <div key={index} className="flex items-center space-x-2 p-2 bg-gray-50 rounded">
-                  {loading ? (
-                    <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
-                  ) : icon ? (
+                <div key={index} className="flex flex-col items-center space-y-1 p-2 bg-gray-50 rounded">
+                  {icon ? (
                     <img
                       src={icon.iconUrl}
                       alt={req.item}
@@ -236,7 +306,6 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
                     </div>
                   )}
                   <div className="text-sm">
-                    <p className="font-medium text-gray-700">{req.item}</p>
                     <p className="text-gray-500">× {req.count}</p>
                   </div>
                 </div>

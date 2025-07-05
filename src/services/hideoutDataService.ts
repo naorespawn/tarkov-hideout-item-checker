@@ -115,13 +115,10 @@ export class HideoutDataService {
     // Convert item requirements
     apiLevel.itemRequirements.forEach(req => {
       if (req.item.name === 'Roubles') {
-        // Handle roubles separately
+        // Handle roubles separately for backward compatibility
         level.roubles = (level.roubles || 0) + req.count;
-      } else if (req.item.name === 'Euros' || req.item.name === 'Dollars') {
-        // Convert other currencies to roubles (approximate)
-        const exchangeRate = req.item.name === 'Euros' ? 130 : 120; // Approximate rates
-        level.roubles = (level.roubles || 0) + (req.count * exchangeRate);
       } else {
+        // Treat all items (including Euros and Dollars) as regular items
         level.requirements.push({
           item: req.item.name,
           count: req.count,

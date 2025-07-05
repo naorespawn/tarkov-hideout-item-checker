@@ -44,3 +44,16 @@ export interface ItemIcon {
 export interface UserProgress {
   [moduleId: string]: number; // current level
 }
+
+export interface PlayerLevel {
+  level: number; // 1-4 (Trader levels)
+}
+
+export type GameEdition = 'standard' | 'left_behind' | 'prepare_for_escape' | 'edge_of_darkness';
+
+export interface EditionConfig {
+  name: string;
+  displayName: string;
+  stashLevel: number;
+  cultistCircleLevel: number;
+}

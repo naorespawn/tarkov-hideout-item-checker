@@ -264,7 +264,10 @@ export const hideoutModules: HideoutModule[] = [
           { item: 'Portable defibrillator', count: 1 }
         ],
         modulePrerequisites: [
-          { module: 'Vents', level: 2 }
+          { module: 'Generator', level: 1 }
+        ],
+        traderRequirements: [
+          { trader: 'Therapist', level: 2 }
         ]
       },
       {
