@@ -420,14 +420,45 @@ export const hideoutModules: HideoutModule[] = [
   },
   {
     id: 'shooting_range',
-    name: 'Shooting range',
+    name: 'Shooting Range',
     levels: [
       {
         level: 1,
+        roubles: 20000,
         requirements: [
+          { item: 'Metal spare parts', count: 1 },
+          { item: 'Bolts', count: 1 },
+          { item: 'Screw nuts', count: 1 }
+        ],
+        modulePrerequisites: [
+          { module: 'Illumination', level: 1 }
+        ]
+      },
+      {
+        level: 2,
+        requirements: [
+          { item: 'Electric motor', count: 3 },
+          { item: 'Construction measuring tape', count: 1 },
+          { item: 'Tube of Poxeram cold welding', count: 1 },
+          { item: 'Toolset', count: 1 },
+          { item: 'Pack of screws', count: 3 },
+          { item: 'Electric drill', count: 1 },
           { item: 'Metal spare parts', count: 5 },
-          { item: 'Duct tape', count: 3 },
-          { item: 'Pack of nails', count: 15 }
+          { item: 'Bundle of wires', count: 3 }
+        ],
+        modulePrerequisites: [
+          { module: 'Illumination', level: 3 },
+          { module: 'Workbench', level: 2 }
+        ]
+      },
+      {
+        level: 3,
+        requirements: [
+          { item: 'Printed circuit board', count: 3 },
+          { item: 'Bundle of wires', count: 5 },
+          { item: 'Metal spare parts', count: 5 },
+          { item: 'Phase control relay', count: 3 },
+          { item: 'Power cord', count: 5 }
         ]
       }
     ]
