@@ -247,21 +247,16 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 50000,
         requirements: [
-          { item: 'Morphine injector', count: 1 },
-          { item: 'Medical bloodset', count: 2 },
-          { item: 'Pile of meds', count: 1 },
-          { item: 'Analgin painkillers', count: 2 },
-          { item: 'Army bandage', count: 2 }
+          { item: 'Pile of meds', count: 1 }
         ]
       },
       {
         level: 2,
+        roubles: 150000,
         requirements: [
-          { item: 'Medical bloodset', count: 4 },
-          { item: 'Pile of meds', count: 2 },
-          { item: 'Ophthalmoscope', count: 1 },
-          { item: 'Portable defibrillator', count: 1 }
+          { item: 'Medical bloodset', count: 2 }
         ],
         modulePrerequisites: [
           { module: 'Generator', level: 1 }
@@ -272,13 +267,14 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 500000,
         requirements: [
-          { item: 'LEDX Skin Transilluminator', count: 3 },
-          { item: 'Ophthalmoscope', count: 1 },
-          { item: 'Portable defibrillator', count: 2 }
+          { item: 'LEDX Skin Transilluminator', count: 1 },
+          { item: 'Ophthalmoscope', count: 1 }
         ],
         modulePrerequisites: [
-          { module: 'Vents', level: 3 }
+          { module: 'Generator', level: 2 },
+          { module: 'Lavatory', level: 2 }
         ]
       }
     ]
@@ -323,32 +319,36 @@ export const hideoutModules: HideoutModule[] = [
   },
   {
     id: 'rest_space',
-    name: 'Rest space',
+    name: 'Rest Space',
     levels: [
       {
         level: 1,
+        roubles: 10000,
         requirements: [
-          { item: 'Duct tape', count: 2 },
-          { item: 'Metal spare parts', count: 2 },
-          { item: 'Paracord', count: 5 }
+          { item: 'Duct tape', count: 1 }
+        ],
+        modulePrerequisites: [
+          { module: 'Vents', level: 1 }
         ]
       },
       {
         level: 2,
-        requirements: [
-          { item: 'Pack of nails', count: 8 },
-          { item: 'Metal spare parts', count: 4 },
-          { item: 'Paracord', count: 8 },
-          { item: 'Pliers', count: 1 }
+        roubles: 35000,
+        requirements: [],
+        modulePrerequisites: [
+          { module: 'Generator', level: 2 },
+          { module: 'Heating', level: 2 }
         ]
       },
       {
         level: 3,
         requirements: [
-          { item: 'Pack of nails', count: 12 },
-          { item: 'Metal spare parts', count: 6 },
-          { item: 'Pliers', count: 2 },
-          { item: 'Construction measuring tape', count: 1 }
+          { item: 'Power cord', count: 4 },
+          { item: 'Bundle of wires', count: 7 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 3 },
+          { module: 'Heating', level: 3 }
         ]
       }
     ]
@@ -360,28 +360,28 @@ export const hideoutModules: HideoutModule[] = [
       {
         level: 1,
         requirements: [
-          { item: 'Pack of nails', count: 5 },
-          { item: 'Metal spare parts', count: 2 },
-          { item: 'Bolts', count: 3 }
+          { item: 'Screw nuts', count: 2 },
+          { item: 'Bolts', count: 2 }
         ]
       },
       {
         level: 2,
         requirements: [
-          { item: 'Pack of nails', count: 8 },
-          { item: 'Metal spare parts', count: 5 },
-          { item: 'Bolts', count: 6 },
-          { item: 'Screw nuts', count: 4 }
+          { item: 'Toolset', count: 3 },
+          { item: 'Electric drill', count: 2 },
+          { item: 'Bolts', count: 6 }
+        ],
+        modulePrerequisites: [
+          { module: 'Illumination', level: 2 }
         ]
       },
       {
         level: 3,
-        requirements: [
-          { item: 'Pack of nails', count: 15 },
-          { item: 'Metal spare parts', count: 10 },
-          { item: 'Bolts', count: 12 },
-          { item: 'Screw nuts', count: 8 },
-          { item: 'Bulbex cable cutter', count: 1 }
+        roubles: 395000,
+        requirements: [],
+        modulePrerequisites: [
+          { module: 'Generator', level: 2 },
+          { module: 'Stash', level: 2 }
         ]
       }
     ]
@@ -483,26 +483,27 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
-        requirements: [
-          { item: 'Metal spare parts', count: 4 },
-          { item: 'Duct tape', count: 3 },
-          { item: 'Radiator helix', count: 8 }
-        ]
+        roubles: 25000,
+        requirements: []
       },
       {
         level: 2,
-        requirements: [
-          { item: 'Metal spare parts', count: 6 },
-          { item: 'Radiator helix', count: 12 },
-          { item: 'Analog thermometer', count: 3 }
+        roubles: 50000,
+        requirements: [],
+        modulePrerequisites: [
+          { module: 'Vents', level: 1 }
         ]
       },
       {
         level: 3,
         requirements: [
-          { item: 'Metal spare parts', count: 8 },
-          { item: 'Radiator helix', count: 16 },
-          { item: 'Pressure gauge', count: 2 }
+          { item: 'Radiator helix', count: 8 },
+          { item: 'Bundle of wires', count: 8 },
+          { item: 'Phase control relay', count: 4 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 2 },
+          { module: 'Workbench', level: 2 }
         ]
       }
     ]
@@ -527,10 +528,28 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 10000,
+        requirements: []
+      },
+      {
+        level: 2,
         requirements: [
-          { item: 'Light bulb', count: 6 },
-          { item: 'Insulating tape', count: 4 },
-          { item: 'Bundle of wires', count: 15 }
+          { item: 'Light bulb', count: 14 },
+          { item: 'Bundle of wires', count: 10 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 1 }
+        ]
+      },
+      {
+        level: 3,
+        roubles: 50000,
+        requirements: [
+          { item: 'Bundle of wires', count: 6 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 2 },
+          { module: 'Workbench', level: 1 }
         ]
       }
     ]
