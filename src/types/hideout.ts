@@ -8,6 +8,8 @@ export interface HideoutLevel {
   level: number;
   requirements: Requirement[];
   roubles?: number;
+  euros?: number;
+  dollars?: number;
   modulePrerequisites?: ModulePrerequisite[];
   traderRequirements?: TraderRequirement[];
   skillRequirements?: SkillRequirement[];

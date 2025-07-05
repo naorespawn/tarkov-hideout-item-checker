@@ -249,32 +249,49 @@ export const hideoutModules: HideoutModule[] = [
         level: 1,
         roubles: 50000,
         requirements: [
-          { item: 'Pile of meds', count: 1 }
+          { item: 'Disposable syringe', count: 1 },
+          { item: 'Pile of meds', count: 1 },
+          { item: 'Aseptic bandage', count: 2 },
+          { item: 'Bottle of OLOLO Multivitamins', count: 1 }
         ]
       },
       {
         level: 2,
         roubles: 150000,
         requirements: [
-          { item: 'Medical bloodset', count: 2 }
+          { item: 'Bottle of saline solution', count: 3 },
+          { item: 'Medical bloodset', count: 2 },
+          { item: 'Esmarch tourniquet', count: 5 },
+          { item: 'Medical tools', count: 3 }
         ],
         modulePrerequisites: [
           { module: 'Generator', level: 1 }
         ],
         traderRequirements: [
           { trader: 'Therapist', level: 2 }
+        ],
+        skillRequirements: [
+          { skill: 'Health', level: 2 }
         ]
       },
       {
         level: 3,
         roubles: 500000,
         requirements: [
-          { item: 'LEDX Skin Transilluminator', count: 1 },
-          { item: 'Ophthalmoscope', count: 1 }
+          { item: 'Ophthalmoscope', count: 1 },
+          { item: 'Bottle of saline solution', count: 4 },
+          { item: 'LEDX Skin Transilluminator', count: 1 }
         ],
         modulePrerequisites: [
           { module: 'Generator', level: 2 },
           { module: 'Lavatory', level: 2 }
+        ],
+        traderRequirements: [
+          { trader: 'Therapist', level: 3 },
+          { trader: 'Skier', level: 2 }
+        ],
+        skillRequirements: [
+          { skill: 'Vitality', level: 3 }
         ]
       }
     ]
@@ -285,34 +302,43 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 25000,
         requirements: [
-          { item: 'Matches', count: 3 },
-          { item: 'Duct tape', count: 2 },
-          { item: 'Metal spare parts', count: 4 }
+          { item: 'Can of white salt', count: 1 },
+          { item: 'Power cord', count: 1 },
+          { item: 'Phase control relay', count: 2 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 1 }
         ]
       },
       {
         level: 2,
         requirements: [
-          { item: 'Silicone tube', count: 2 },
-          { item: 'Metal spare parts', count: 6 },
-          { item: 'Analog thermometer', count: 2 },
-          { item: 'Pressure gauge', count: 1 }
+          { item: 'Wrench', count: 4 },
+          { item: 'Corrugated hose', count: 2 },
+          { item: 'Alkaline cleaner for heat exchangers', count: 2 },
+          { item: 'Phase control relay', count: 1 }
         ],
         modulePrerequisites: [
-          { module: 'Vents', level: 2 }
+          { module: 'Lavatory', level: 2 }
         ]
       },
       {
         level: 3,
+        roubles: 125000,
         requirements: [
-          { item: 'Silicone tube', count: 4 },
-          { item: 'Metal spare parts', count: 8 },
-          { item: 'Electric motor', count: 2 },
-          { item: 'Pressure gauge', count: 2 }
+          { item: 'Can of Majaica coffee beans', count: 3 },
+          { item: 'Pack of sodium bicarbonate', count: 3 },
+          { item: 'Smoked Chimney drain cleaner', count: 2 }
         ],
         modulePrerequisites: [
-          { module: 'Vents', level: 3 }
+          { module: 'Generator', level: 2 },
+          { module: 'Lavatory', level: 3 },
+          { module: 'Stash', level: 2 }
+        ],
+        skillRequirements: [
+          { skill: 'Metabolism', level: 3 }
         ]
       }
     ]
@@ -484,14 +510,23 @@ export const hideoutModules: HideoutModule[] = [
       {
         level: 1,
         roubles: 25000,
-        requirements: []
+        requirements: [
+          { item: 'Classic matches', count: 2 }
+        ]
       },
       {
         level: 2,
         roubles: 50000,
-        requirements: [],
+        requirements: [
+          { item: 'Dry fuel', count: 3 },
+          { item: 'Hunting matches', count: 2 },
+          { item: 'Crickent lighter', count: 3 }
+        ],
         modulePrerequisites: [
           { module: 'Vents', level: 1 }
+        ],
+        skillRequirements: [
+          { skill: 'Endurance', level: 1 }
         ]
       },
       {
@@ -499,11 +534,15 @@ export const hideoutModules: HideoutModule[] = [
         requirements: [
           { item: 'Radiator helix', count: 8 },
           { item: 'Bundle of wires', count: 8 },
-          { item: 'Phase control relay', count: 4 }
+          { item: 'Phase control relay', count: 4 },
+          { item: 'Military corrugated tube', count: 2 }
         ],
         modulePrerequisites: [
           { module: 'Generator', level: 2 },
           { module: 'Workbench', level: 2 }
+        ],
+        traderRequirements: [
+          { trader: 'Ragman', level: 2 }
         ]
       }
     ]
@@ -567,7 +606,7 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
-        roubles: 25000,
+        dollars: 25000,
         requirements: [
           { item: 'Gas mask air filter', count: 5 },
           { item: 'Military power filter', count: 5 },
@@ -589,10 +628,20 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        euros: 25000,
         requirements: [
-          { item: 'Power supply unit', count: 10 },
-          { item: 'Phase control relay', count: 15 },
-          { item: 'Pressure gauge', count: 5 }
+          { item: 'Phased array element', count: 4 },
+          { item: 'Advanced current converter', count: 1 },
+          { item: 'Working LCD', count: 3 },
+          { item: 'Military cable', count: 10 },
+          { item: 'Military power filter', count: 10 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 3 },
+          { module: 'Workbench', level: 3 }
+        ],
+        traderRequirements: [
+          { trader: 'Peacekeeper', level: 4 }
         ]
       }
     ]
@@ -617,19 +666,28 @@ export const hideoutModules: HideoutModule[] = [
       {
         level: 2,
         requirements: [
-          { item: 'Graphics card', count: 15 },
-          { item: 'Power supply unit', count: 5 },
-          { item: 'CPU fan', count: 10 },
-          { item: 'RAM', count: 10 }
+          { item: 'CPU fan', count: 15 },
+          { item: 'Power supply unit', count: 10 },
+          { item: 'Printed circuit board', count: 15 },
+          { item: 'Phase control relay', count: 5 },
+          { item: 'Military power filter', count: 2 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 3 }
         ]
       },
       {
         level: 3,
         requirements: [
-          { item: 'Graphics card', count: 25 },
-          { item: 'Power supply unit', count: 10 },
-          { item: 'CPU fan', count: 15 },
-          { item: 'Processor', count: 10 }
+          { item: 'CPU fan', count: 25 },
+          { item: 'Silicone tube', count: 15 },
+          { item: 'Electric motor', count: 10 },
+          { item: 'Pressure gauge', count: 10 },
+          { item: '6-STEN-140-M military battery', count: 1 }
+        ],
+        modulePrerequisites: [
+          { module: 'Solar power', level: 1 },
+          { module: 'Water collector', level: 3 }
         ]
       }
     ]

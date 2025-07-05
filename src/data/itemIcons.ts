@@ -651,6 +651,106 @@ export const itemIcons: { [key: string]: ItemIcon } = {
     "name": "Capacitors",
     "iconUrl": "https://assets.tarkov.dev/5d1b2ffd86f77425243e98fe-icon.webp",
     "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Capacitors"
+  },
+  "Military power filter": {
+    "name": "Military power filter",
+    "iconUrl": "https://assets.tarkov.dev/5e4abb5086f77406975c9342-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Military_power_filter"
+  },
+  "6-STEN-140-M military battery": {
+    "name": "6-STEN-140-M military battery",
+    "iconUrl": "https://assets.tarkov.dev/590a3efd86f77437d351a25b-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/6-STEN-140-M_military_battery"
+  },
+  "Disposable syringe": {
+    "name": "Disposable syringe",
+    "iconUrl": "https://assets.tarkov.dev/5af0484c86f7740f02001f7f-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Disposable_syringe"
+  },
+  "Aseptic bandage": {
+    "name": "Aseptic bandage",
+    "iconUrl": "https://assets.tarkov.dev/544fb3364bdc2d34748b456a-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Aseptic_bandage"
+  },
+  "Bottle of OLOLO Multivitamins": {
+    "name": "Bottle of OLOLO Multivitamins",
+    "iconUrl": "https://assets.tarkov.dev/5c0e531d86f7747fa54205c9-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Bottle_of_OLOLO_Multivitamins"
+  },
+  "Bottle of saline solution": {
+    "name": "Bottle of saline solution",
+    "iconUrl": "https://assets.tarkov.dev/5af0534a86f7743b6f354284-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Bottle_of_saline_solution"
+  },
+  "Esmarch tourniquet": {
+    "name": "Esmarch tourniquet",
+    "iconUrl": "https://assets.tarkov.dev/5af0548586f7743a532b7e99-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Esmarch_tourniquet"
+  },
+  "Medical tools": {
+    "name": "Medical tools",
+    "iconUrl": "https://assets.tarkov.dev/5af0561e86f7745f5f3ad6ac-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Medical_tools"
+  },
+  "Can of white salt": {
+    "name": "Can of white salt",
+    "iconUrl": "https://assets.tarkov.dev/5a0448bc86f77404486d96e5-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Can_of_white_salt"
+  },
+  "Alkaline cleaner for heat exchangers": {
+    "name": "Alkaline cleaner for heat exchangers",
+    "iconUrl": "https://assets.tarkov.dev/5c1267ee86f77416ec610f72-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Alkaline_cleaner_for_heat_exchangers"
+  },
+  "Can of Majaica coffee beans": {
+    "name": "Can of Majaica coffee beans",
+    "iconUrl": "https://assets.tarkov.dev/5bc9b156d4351e00367fbce9-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Can_of_Majaica_coffee_beans"
+  },
+  "Pack of sodium bicarbonate": {
+    "name": "Pack of sodium bicarbonate",
+    "iconUrl": "https://assets.tarkov.dev/5bc9b820d4351e003562b8a1-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Pack_of_sodium_bicarbonate"
+  },
+  "Smoked Chimney drain cleaner": {
+    "name": "Smoked Chimney drain cleaner",
+    "iconUrl": "https://assets.tarkov.dev/5c12688486f77426843c7d32-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Smoked_Chimney_drain_cleaner"
+  },
+  "Classic matches": {
+    "name": "Classic matches",
+    "iconUrl": "https://assets.tarkov.dev/57347b8b24597737dd42e192-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Classic_matches"
+  },
+  "Dry fuel": {
+    "name": "Dry fuel",
+    "iconUrl": "https://assets.tarkov.dev/5d1b317c86f7742523398394-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Dry_fuel"
+  },
+  "Hunting matches": {
+    "name": "Hunting matches",
+    "iconUrl": "https://assets.tarkov.dev/61bf7b6302b3924be92fa8c3-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Hunting_matches"
+  },
+  "Military corrugated tube": {
+    "name": "Military corrugated tube",
+    "iconUrl": "https://assets.tarkov.dev/5e4abc6786f77406812bd572-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Military_corrugated_tube"
+  },
+  "Phased array element": {
+    "name": "Phased array element",
+    "iconUrl": "https://assets.tarkov.dev/5a0c59791526d8dba737bba7-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Phased_array_element"
+  },
+  "Advanced current converter": {
+    "name": "Advanced current converter",
+    "iconUrl": "https://assets.tarkov.dev/5a0c6779159bd40c18533de2-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Advanced_current_converter"
+  },
+  "Military cable": {
+    "name": "Military cable",
+    "iconUrl": "https://assets.tarkov.dev/5a0dc45586f7742f6c3a3df2-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Military_cable"
   }
 };
 
