@@ -641,6 +641,16 @@ export const itemIcons: { [key: string]: ItemIcon } = {
     "name": "Graphics card",
     "iconUrl": "https://assets.tarkov.dev/57347ca924597744596b4e71-icon.webp",
     "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Graphics_card"
+  },
+  "Crickent lighter": {
+    "name": "Crickent lighter",
+    "iconUrl": "https://assets.tarkov.dev/5d1b2f3f86f77425227d1674-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Crickent_lighter"
+  },
+  "Capacitors": {
+    "name": "Capacitors",
+    "iconUrl": "https://assets.tarkov.dev/5d1b2ffd86f77425243e98fe-icon.webp",
+    "wikiLink": "https://escapefromtarkov.fandom.com/wiki/Capacitors"
   }
 };
 

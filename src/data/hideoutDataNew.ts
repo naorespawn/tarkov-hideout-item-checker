@@ -529,7 +529,9 @@ export const hideoutModules: HideoutModule[] = [
       {
         level: 1,
         roubles: 10000,
-        requirements: []
+        requirements: [
+          { item: 'Crickent lighter', count: 1 }
+        ]
       },
       {
         level: 2,
@@ -545,11 +547,16 @@ export const hideoutModules: HideoutModule[] = [
         level: 3,
         roubles: 50000,
         requirements: [
+          { item: 'Capacitors', count: 7 },
+          { item: 'Energy-saving lamp', count: 12 },
           { item: 'Bundle of wires', count: 6 }
         ],
         modulePrerequisites: [
           { module: 'Generator', level: 2 },
           { module: 'Workbench', level: 1 }
+        ],
+        traderRequirements: [
+          { trader: 'Mechanic', level: 2 }
         ]
       }
     ]
