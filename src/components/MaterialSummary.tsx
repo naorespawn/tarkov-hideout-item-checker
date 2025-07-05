@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { HideoutModule as HideoutModuleType, UserProgress, Requirement } from '../types/hideout';
 import { HideoutPrerequisiteService } from '../services/hideoutPrerequisiteService';
 import { TraderLevelService } from '../services/traderLevelService';
+import { getItemIcon } from '../data/itemIcons';
 
 interface MaterialSummaryProps {
   hideoutModules: HideoutModuleType[];
@@ -84,11 +85,12 @@ export const MaterialSummary: React.FC<MaterialSummaryProps> = ({
             count: req.count
           });
         } else {
+          const itemIcon = getItemIcon(req.item);
           materialMap.set(req.item, {
             item: req.item,
             totalCount: req.count,
-            iconLink: req.iconLink,
-            wikiLink: `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(req.item)}`,
+            iconLink: itemIcon?.iconUrl,
+            wikiLink: itemIcon?.wikiLink || `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(req.item)}`,
             sources: [{
               moduleName: module.name,
               level: nextLevel,
