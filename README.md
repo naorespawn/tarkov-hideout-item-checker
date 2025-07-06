@@ -1,46 +1,99 @@
-# Getting Started with Create React App
+# Tarkov Hideout Item Checker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-TypeScript web application that helps Escape from Tarkov players track their Hideout progression and calculate required materials.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Real-time Material Tracking**: Calculate exactly what items you need for your next hideout upgrades
+- **Game Edition Support**: Automatic configuration for Standard, Left Behind, Prepare for Escape, and Edge of Darkness editions
+- **PMC Level Integration**: Hideout restrictions based on your PMC level and trader availability
+- **Offline Functionality**: Works without internet connection using static fallback data
+- **Persistent Progress**: Your hideout levels are saved locally between sessions
+- **Japanese UI**: Native Japanese interface with English item names
 
-### `npm start`
+## Live Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Visit the live application: [https://naorespawn.github.io/tarkov-hideout-item-checker/](https://naorespawn.github.io/tarkov-hideout-item-checker/)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Development Setup
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 16+ 
+- npm
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone https://github.com/naorespawn/tarkov-hideout-item-checker.git
+cd tarkov-hideout-item-checker
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Available Scripts
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Development
+```bash
+npm start          # Start development server at http://localhost:3000
+npm run build      # Create production build
+npm test          # Run tests in watch mode
+```
 
-### `npm run eject`
+#### Testing
+```bash
+npx playwright test           # Run end-to-end tests
+npx playwright test --ui      # Run tests with Playwright UI
+npx playwright test --headed  # Run tests in headed mode
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Deployment
+```bash
+npm run deploy    # Deploy to GitHub Pages
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Architecture
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Core Services
+- **HideoutDataService**: API integration with tarkov.dev GraphQL endpoint and 24-hour caching
+- **HideoutPrerequisiteService**: Complex dependency calculations between hideout modules
+- **TraderLevelService**: PMC level to trader level mappings and restrictions
+- **GameEditionService**: Game edition configurations and initial state management
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Data Flow
+1. App loads immediately with static fallback data
+2. Async API call fetches fresh data from tarkov.dev
+3. User progress persisted to localStorage
+4. Real-time material calculations with useMemo optimization
 
-## Learn More
+### Key Features
+- **Smart Caching**: 24-hour localStorage cache with graceful API fallback
+- **Complex Dependencies**: Handles prerequisite chains between hideout modules
+- **PMC Level Restrictions**: Certain modules require specific trader levels
+- **Material Aggregation**: Combines requirements from all buildable modules
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Technical Stack
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Frontend**: React 19 + TypeScript
+- **Styling**: Tailwind CSS with utility-first approach
+- **Build**: CRACO (Create React App Configuration Override)
+- **Testing**: Playwright for E2E testing
+- **API**: tarkov.dev GraphQL integration
+- **Deployment**: GitHub Pages
+
+## Data Sources
+
+- **Hideout Data**: [tarkov.dev API](https://api.tarkov.dev/graphql)
+- **Item Icons**: tarkov.dev
+- **Game Information**: [Escape from Tarkov Wiki](https://escapefromtarkov.fandom.com/wiki/Hideout)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `npx playwright test`
+5. Submit a pull request
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
