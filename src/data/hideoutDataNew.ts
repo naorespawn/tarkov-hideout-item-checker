@@ -116,6 +116,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 75000,
         requirements: [
           { item: 'NIXXOR lens', count: 8 },
           { item: 'Working LCD', count: 2 },
@@ -147,6 +148,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 25000,
         requirements: [
           { item: 'KEKTAPE duct tape', count: 1 },
           { item: 'Corrugated hose', count: 3 },
@@ -160,6 +162,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 50000,
         requirements: [
           { item: 'Metal spare parts', count: 8 },
           { item: 'Silicone tube', count: 4 },
@@ -199,6 +202,7 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 10000,
         requirements: [
           { item: 'Duct tape', count: 3 },
           { item: 'Screw nuts', count: 5 },
@@ -211,6 +215,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 50000,
         requirements: [
           { item: 'Toolset', count: 2 },
           { item: 'Corrugated hose', count: 6 },
@@ -318,6 +323,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 75000,
         requirements: [
           { item: 'Wrench', count: 4 },
           { item: 'Corrugated hose', count: 2 },
@@ -372,6 +378,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 100000,
         requirements: [
           { item: 'Power cord', count: 4 },
           { item: 'Bundle of wires', count: 7 }
@@ -437,28 +444,55 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 250000,
         requirements: [
-          { item: 'Graphics card', count: 1 },
-          { item: 'Printed circuit board', count: 4 },
-          { item: 'CPU fan', count: 6 }
+          { item: 'Factory plan map', count: 1 },
+          { item: 'Intelligence folder', count: 1 },
+          { item: 'Topographic survey map', count: 1 }
+        ],
+        modulePrerequisites: [
+          { module: 'Security', level: 2 },
+          { module: 'Vents', level: 2 }
         ]
       },
       {
         level: 2,
+        roubles: 650000,
         requirements: [
-          { item: 'Graphics card', count: 3 },
-          { item: 'Printed circuit board', count: 8 },
-          { item: 'CPU fan', count: 10 },
-          { item: 'RAM', count: 8 }
+          { item: 'Intelligence folder', count: 3 },
+          { item: 'Secure Flash drive', count: 3 },
+          { item: 'Power cord', count: 7 },
+          { item: 'Damaged hard drive', count: 4 }
+        ],
+        modulePrerequisites: [
+          { module: 'Security', level: 3 },
+          { module: 'Medstation', level: 3 },
+          { module: 'Nutrition unit', level: 3 }
+        ],
+        traderRequirements: [
+          { trader: 'Mechanic', level: 2 }
+        ],
+        skillRequirements: [
+          { skill: 'Attention', level: 3 }
         ]
       },
       {
         level: 3,
+        roubles: 1500000,
         requirements: [
-          { item: 'Graphics card', count: 10 },
-          { item: 'RAM', count: 15 },
-          { item: 'Processor', count: 5 },
-          { item: 'Power supply unit', count: 2 }
+          { item: 'Military cable', count: 5 },
+          { item: 'Military COFDM Wireless Signal Transmitter', count: 2 },
+          { item: 'Far-forward GPS Signal Amplifier Unit', count: 1 },
+          { item: 'VPX Flash Storage Module', count: 2 },
+          { item: 'Military flash drive', count: 5 },
+          { item: 'Secure magnetic tape cassette', count: 2 }
+        ],
+        modulePrerequisites: [
+          { module: 'Workbench', level: 3 },
+          { module: 'Generator', level: 3 }
+        ],
+        traderRequirements: [
+          { trader: 'Prapor', level: 3 }
         ]
       }
     ]
@@ -481,6 +515,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 150000,
         requirements: [
           { item: 'Electric motor', count: 3 },
           { item: 'Construction measuring tape', count: 1 },
@@ -498,6 +533,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 400000,
         requirements: [
           { item: 'Printed circuit board', count: 3 },
           { item: 'Bundle of wires', count: 5 },
@@ -514,6 +550,7 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 50000,
         requirements: [
           { item: 'Pack of nails', count: 8 },
           { item: 'Metal spare parts', count: 3 },
@@ -550,6 +587,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 125000,
         requirements: [
           { item: 'Radiator helix', count: 8 },
           { item: 'Bundle of wires', count: 8 },
@@ -593,6 +631,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 25000,
         requirements: [
           { item: 'Light bulb', count: 14 },
           { item: 'Bundle of wires', count: 10 }
@@ -671,6 +710,7 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 200000,
         requirements: [
           { item: 'T-Shaped plug', count: 5 },
           { item: 'VPX Flash Storage Module', count: 1 },
@@ -684,6 +724,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 2,
+        roubles: 400000,
         requirements: [
           { item: 'CPU fan', count: 15 },
           { item: 'Power supply unit', count: 10 },
@@ -697,6 +738,7 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
+        roubles: 800000,
         requirements: [
           { item: 'CPU fan', count: 25 },
           { item: 'Silicone tube', count: 15 },
@@ -717,6 +759,7 @@ export const hideoutModules: HideoutModule[] = [
     levels: [
       {
         level: 1,
+        roubles: 100000,
         requirements: [
           { item: 'Metal spare parts', count: 2 },
           { item: 'Pressure gauge', count: 2 },
