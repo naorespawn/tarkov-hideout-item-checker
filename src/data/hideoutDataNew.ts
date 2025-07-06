@@ -418,7 +418,7 @@ export const hideoutModules: HideoutModule[] = [
         roubles: 395000,
         requirements: [
           { item: 'Pliers Elite', count: 2 },
-          { item: 'FireKlean gun lube', count: 1 },
+          { item: '#FireKlean gun lube', count: 1 },
           { item: 'Can of thermite', count: 2 }
         ],
         modulePrerequisites: [
