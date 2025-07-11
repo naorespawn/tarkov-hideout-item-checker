@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/tarkov-hideout-item-checker/static/css/main.b2aaf27e.css",
-    "main.js": "/tarkov-hideout-item-checker/static/js/main.1c22a62a.js",
+    "main.js": "/tarkov-hideout-item-checker/static/js/main.598186dc.js",
     "static/js/453.bb137d11.chunk.js": "/tarkov-hideout-item-checker/static/js/453.bb137d11.chunk.js",
     "index.html": "/tarkov-hideout-item-checker/index.html",
     "main.b2aaf27e.css.map": "/tarkov-hideout-item-checker/static/css/main.b2aaf27e.css.map",
-    "main.1c22a62a.js.map": "/tarkov-hideout-item-checker/static/js/main.1c22a62a.js.map",
+    "main.598186dc.js.map": "/tarkov-hideout-item-checker/static/js/main.598186dc.js.map",
     "453.bb137d11.chunk.js.map": "/tarkov-hideout-item-checker/static/js/453.bb137d11.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b2aaf27e.css",
-    "static/js/main.1c22a62a.js"
+    "static/js/main.598186dc.js"
   ]
 }
