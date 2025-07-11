@@ -19,6 +19,7 @@ interface APIItemRequirement {
   count: number;
   item: {
     name: string;
+    shortName: string;
     iconLink: string;
   };
 }
@@ -59,6 +60,7 @@ export class HideoutDataService {
               itemRequirements {
                 item {
                   name
+                  shortName
                   iconLink
                 }
                 count
@@ -121,6 +123,7 @@ export class HideoutDataService {
         // Treat all items (including Euros and Dollars) as regular items
         level.requirements.push({
           item: req.item.name,
+          shortName: req.item.shortName,
           count: req.count,
           iconLink: req.item.iconLink
         });

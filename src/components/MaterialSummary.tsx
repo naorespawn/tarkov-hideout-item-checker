@@ -12,6 +12,7 @@ interface MaterialSummaryProps {
 
 interface MaterialSummaryItem {
   item: string;
+  shortName?: string;
   totalCount: number;
   iconLink?: string;
   wikiLink?: string;
@@ -88,6 +89,7 @@ export const MaterialSummary: React.FC<MaterialSummaryProps> = ({
           const itemIcon = getItemIcon(req.item);
           materialMap.set(req.item, {
             item: req.item,
+            shortName: req.shortName,
             totalCount: req.count,
             iconLink: itemIcon?.iconUrl,
             wikiLink: itemIcon?.wikiLink || `https://escapefromtarkov.fandom.com/wiki/${encodeURIComponent(req.item)}`,
@@ -176,7 +178,7 @@ export const MaterialSummary: React.FC<MaterialSummaryProps> = ({
                       className="text-xs text-blue-600 hover:text-blue-800 hover:underline block truncate max-w-full"
                       title={material.item}
                     >
-                      {material.item}
+                      {material.shortName || material.item}
                     </a>
                   </div>
                 </div>

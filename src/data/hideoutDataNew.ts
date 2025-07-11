@@ -182,17 +182,52 @@ export const hideoutModules: HideoutModule[] = [
       {
         level: 2,
         roubles: 2500000,
-        requirements: []
+        requirements: [
+          { item: 'WD-40 (100ml)', count: 4 },
+          { item: 'Hand drill', count: 1 },
+          { item: 'Pack of nails', count: 5 },
+          { item: 'Pack of screws', count: 10 }
+        ],
+        modulePrerequisites: [
+          { module: 'Vents', level: 1 }
+        ]
       },
       {
         level: 3,
         roubles: 8500000,
-        requirements: []
+        requirements: [
+          { item: 'Electric drill', count: 2 },
+          { item: 'Pack of screws', count: 15 },
+          { item: 'Pack of nails', count: 7 }
+        ],
+        modulePrerequisites: [
+          { module: 'Vents', level: 2 },
+          { module: 'Heating', level: 2 }
+        ],
+        traderRequirements: [
+          { trader: 'Prapor', level: 3 },
+          { trader: 'Ragman', level: 3 }
+        ]
       },
       {
         level: 4,
-        roubles: 21000000,
-        requirements: []
+        euros: 200000,
+        requirements: [
+          { item: 'Screw nuts', count: 10 },
+          { item: 'Bolts', count: 10 },
+          { item: 'Shustrilo sealing foam', count: 5 },
+          { item: 'Ratchet wrench', count: 2 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 3 },
+          { module: 'Workbench', level: 3 },
+          { module: 'Heating', level: 3 },
+          { module: 'Intelligence Center', level: 2 }
+        ],
+        traderRequirements: [
+          { trader: 'Peacekeeper', level: 4 },
+          { trader: 'Ragman', level: 4 }
+        ]
       }
     ]
   },

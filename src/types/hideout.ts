@@ -17,6 +17,7 @@ export interface HideoutLevel {
 
 export interface Requirement {
   item: string;
+  shortName?: string;
   count: number;
   nonFunctional?: boolean;
   iconLink?: string;

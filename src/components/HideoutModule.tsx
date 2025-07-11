@@ -145,7 +145,22 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
     if (nextLevelData.roubles) {
       items.push({
         item: 'Roubles',
+        shortName: 'Roubles',
         count: nextLevelData.roubles
+      });
+    }
+    if (nextLevelData.euros) {
+      items.push({
+        item: 'Euros',
+        shortName: 'Euros',
+        count: nextLevelData.euros
+      });
+    }
+    if (nextLevelData.dollars) {
+      items.push({
+        item: 'Dollars',
+        shortName: 'Dollars',
+        count: nextLevelData.dollars
       });
     }
     
@@ -165,8 +180,14 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         if (level.roubles) {
           items.set('Roubles', (items.get('Roubles') || 0) + level.roubles);
         }
+        if (level.euros) {
+          items.set('Euros', (items.get('Euros') || 0) + level.euros);
+        }
+        if (level.dollars) {
+          items.set('Dollars', (items.get('Dollars') || 0) + level.dollars);
+        }
       });
-    return Array.from(items.entries()).map(([item, count]) => ({ item, count }));
+    return Array.from(items.entries()).map(([item, count]) => ({ item, shortName: ['Roubles', 'Euros', 'Dollars'].includes(item) ? item : undefined, count }));
   };
 
   const nextRequirements = getNextRequiredItems();
