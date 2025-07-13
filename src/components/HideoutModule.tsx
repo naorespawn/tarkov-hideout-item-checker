@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { HideoutModule as HideoutModuleType, ItemIcon, UserProgress } from '../types/hideout';
-import { TraderLevelService } from '../services/traderLevelService';
-import { HideoutPrerequisiteService } from '../services/hideoutPrerequisiteService';
+import { HideoutAccessibilityService } from '../services/hideoutAccessibilityService';
 import { getItemIcon } from '../data/itemIcons';
 
 interface HideoutModuleProps {
@@ -25,45 +24,15 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
   const maxLevel = Math.max(...module.levels.map(l => l.level));
 
   // 今後のレベルでPMCレベル制限があるかチェック
-  const hasFuturePMCRestrictions = module.levels.some(level => {
-    if (level.level <= currentLevel) return false;
-    if (!level.traderRequirements) return false;
-    return level.traderRequirements.some(traderReq => 
-      !TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)
-    );
-  });
+  const hasFuturePMCRestrictions = HideoutAccessibilityService.hasFuturePMCRestrictions(
+    module,
+    currentLevel,
+    pmcLevel
+  );
 
   // 施設が利用可能かどうかをチェック（前提条件を含む）
   const isModuleAccessible = (): boolean => {
-    // Convert userProgress (by moduleId) to progress by module name
-    const userProgressByName: { [moduleName: string]: number } = {};
-    Object.entries(userProgress).forEach(([moduleId, level]) => {
-      const matchingModule = allModules.find(m => m.id === moduleId);
-      if (matchingModule) {
-        userProgressByName[matchingModule.name] = level;
-      }
-    });
-    
-    // Check if any level from current+1 to max has trader requirements that can't be met
-    for (let checkLevel = currentLevel + 1; checkLevel <= maxLevel; checkLevel++) {
-      const levelData = module.levels.find(l => l.level === checkLevel);
-      if (levelData && levelData.traderRequirements) {
-        for (const traderReq of levelData.traderRequirements) {
-          if (!TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)) {
-            return false;
-          }
-        }
-      }
-    }
-    
-    // 既に最大レベルの場合はアクセス可能
-    if (currentLevel >= maxLevel) {
-      return true;
-    }
-    
-    // 次のレベルが建設可能かチェック
-    const nextLevel = currentLevel + 1;
-    return HideoutPrerequisiteService.isStationLevelAvailable(module.name, nextLevel, userProgressByName);
+    return HideoutAccessibilityService.isModuleAccessible(module, userProgress, pmcLevel, allModules);
   };
 
   const moduleAccessible = isModuleAccessible();
@@ -94,39 +63,7 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
     if (currentLevel >= maxLevel) return false;
     
     const nextLevel = currentLevel + 1;
-    const nextLevelData = module.levels.find(l => l.level === nextLevel);
-    
-    if (!nextLevelData) return false;
-    
-    // Convert userProgress (by moduleId) to progress by module name for HideoutPrerequisiteService
-    const userProgressByName: { [moduleName: string]: number } = {};
-    Object.entries(userProgress).forEach(([moduleId, level]) => {
-      const matchingModule = allModules.find(m => m.id === moduleId);
-      if (matchingModule) {
-        userProgressByName[matchingModule.name] = level;
-      }
-    });
-    
-    // Check module prerequisites
-    if (nextLevelData.modulePrerequisites) {
-      for (const prereq of nextLevelData.modulePrerequisites) {
-        const currentPrereqLevel = userProgressByName[prereq.module] || 0;
-        if (currentPrereqLevel < prereq.level) {
-          return false;
-        }
-      }
-    }
-    
-    // Check trader requirements  
-    if (nextLevelData.traderRequirements) {
-      for (const traderReq of nextLevelData.traderRequirements) {
-        if (!TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)) {
-          return false;
-        }
-      }
-    }
-    
-    return true;
+    return HideoutAccessibilityService.canBuildModuleLevel(module, nextLevel, userProgress, pmcLevel, allModules);
   };
 
   const handleIconClick = (itemName: string) => {

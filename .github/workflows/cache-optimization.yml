@@ -1,0 +1,100 @@
+name: Cache Optimization
+
+on:
+  schedule:
+    # Run every Sunday at 2 AM UTC to refresh caches
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+jobs:
+  refresh-caches:
+    name: Refresh Build Caches
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Clear npm cache
+        run: npm cache clean --force
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Cache TypeScript compilation
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+            .tsbuildinfo
+          key: typescript-${{ runner.os }}-${{ hashFiles('package-lock.json', 'tsconfig.json') }}
+
+  analyze-bundle:
+    name: Bundle Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install bundle analyzer
+        run: npm install -g webpack-bundle-analyzer
+
+      - name: Build with source maps
+        run: npm run build
+        env:
+          GENERATE_SOURCEMAP: true
+
+      - name: Analyze bundle
+        run: |
+          echo "## Bundle Analysis Report" >> $GITHUB_STEP_SUMMARY
+          echo "Generated on: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Bundle sizes
+          echo "### Bundle Sizes" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          du -sh build/static/js/*.js >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          
+          # Gzipped sizes
+          echo "### Gzipped Sizes" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          for file in build/static/js/*.js; do
+            gzip -c "$file" | wc -c | xargs echo "$(basename "$file"):"
+          done >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis
+          path: build/
+          retention-days: 30

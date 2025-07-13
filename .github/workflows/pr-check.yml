@@ -1,0 +1,83 @@
+name: PR Quick Check
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quick-check:
+    name: Quick Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for package.json changes
+        id: package-check
+        run: |
+          if git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -q package.json; then
+            echo "package-changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "package-changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: TypeScript compilation check
+        run: npx tsc --noEmit
+
+      - name: Build check
+        run: npm run build
+        env:
+          CI: false
+
+      - name: Quick unit tests
+        run: npm test -- --watchAll=false --testPathIgnorePatterns=/tests/ --passWithNoTests
+
+      - name: ESLint check
+        run: npx eslint src/ --ext .ts,.tsx --max-warnings 0
+        continue-on-error: true
+
+      - name: Bundle size check
+        if: steps.package-check.outputs.package-changed == 'true'
+        run: |
+          echo "Bundle size analysis:"
+          du -sh build/static/js/*.js | head -5
+          echo "Checking if bundle size is reasonable..."
+          MAX_SIZE=100k
+          BUNDLE_SIZE=$(du -k build/static/js/main.*.js | cut -f1)
+          if [ $BUNDLE_SIZE -gt 100 ]; then
+            echo "Warning: Bundle size ($BUNDLE_SIZE KB) is larger than expected ($MAX_SIZE)"
+          else
+            echo "Bundle size ($BUNDLE_SIZE KB) is within expected range"
+          fi
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          allow-licenses: MIT, Apache-2.0, BSD-3-Clause, BSD-2-Clause, ISC

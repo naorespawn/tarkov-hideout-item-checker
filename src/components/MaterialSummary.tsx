@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
-import { HideoutModule as HideoutModuleType, UserProgress, Requirement } from '../types/hideout';
-import { HideoutPrerequisiteService } from '../services/hideoutPrerequisiteService';
-import { TraderLevelService } from '../services/traderLevelService';
+import { HideoutModule as HideoutModuleType, UserProgress } from '../types/hideout';
+import { HideoutAccessibilityService } from '../services/hideoutAccessibilityService';
 import { getItemIcon } from '../data/itemIcons';
 
 interface MaterialSummaryProps {
@@ -29,50 +28,7 @@ export const MaterialSummary: React.FC<MaterialSummaryProps> = ({
   pmcLevel
 }) => {
   const upgradableStations = useMemo(() => {
-    const upgradableStations: {
-      module: HideoutModuleType;
-      nextLevel: number;
-      requirements: Requirement[];
-    }[] = [];
-
-    hideoutModules.forEach(module => {
-      const currentLevel = userProgress[module.id] || 0;
-      const nextLevel = currentLevel + 1;
-
-      // 次のレベルが存在するかチェック
-      const nextLevelData = module.levels.find(level => level.level === nextLevel);
-      if (!nextLevelData) return;
-
-      // PMCレベル制限チェック（traderRequirementsベース）
-      if (nextLevelData.traderRequirements) {
-        const hasUnmetTraderRequirements = nextLevelData.traderRequirements.some(traderReq => 
-          !TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)
-        );
-        if (hasUnmetTraderRequirements) {
-          return;
-        }
-      }
-
-      // 前提条件チェック - userProgressをmodule.idベースに変換
-      const userProgressByName: { [stationName: string]: number } = {};
-      hideoutModules.forEach(m => {
-        if (userProgress[m.id] !== undefined) {
-          userProgressByName[m.name] = userProgress[m.id];
-        }
-      });
-
-      if (!HideoutPrerequisiteService.isStationLevelAvailable(module.name, nextLevel, userProgressByName)) {
-        return;
-      }
-
-      upgradableStations.push({
-        module,
-        nextLevel,
-        requirements: nextLevelData.requirements
-      });
-    });
-
-    return upgradableStations;
+    return HideoutAccessibilityService.getUpgradableModules(hideoutModules, userProgress, pmcLevel);
   }, [hideoutModules, userProgress, pmcLevel]);
 
   const materialSummary = useMemo(() => {
