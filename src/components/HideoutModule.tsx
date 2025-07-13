@@ -25,17 +25,16 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
   const maxLevel = Math.max(...module.levels.map(l => l.level));
 
   // 今後のレベルでPMCレベル制限があるかチェック
-  const hasFuturePMCRestrictions = module.levels.some(level => 
-    level.level > currentLevel && !TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)
-  );
+  const hasFuturePMCRestrictions = module.levels.some(level => {
+    if (level.level <= currentLevel) return false;
+    if (!level.traderRequirements) return false;
+    return level.traderRequirements.some(traderReq => 
+      !TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)
+    );
+  });
 
   // 施設が利用可能かどうかをチェック（前提条件を含む）
   const isModuleAccessible = (): boolean => {
-    // PMC レベル制限をチェック
-    if (!TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)) {
-      return false;
-    }
-    
     // Convert userProgress (by moduleId) to progress by module name
     const userProgressByName: { [moduleName: string]: number } = {};
     Object.entries(userProgress).forEach(([moduleId, level]) => {
@@ -44,6 +43,18 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
         userProgressByName[matchingModule.name] = level;
       }
     });
+    
+    // Check if any level from current+1 to max has trader requirements that can't be met
+    for (let checkLevel = currentLevel + 1; checkLevel <= maxLevel; checkLevel++) {
+      const levelData = module.levels.find(l => l.level === checkLevel);
+      if (levelData && levelData.traderRequirements) {
+        for (const traderReq of levelData.traderRequirements) {
+          if (!TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)) {
+            return false;
+          }
+        }
+      }
+    }
     
     // 既に最大レベルの場合はアクセス可能
     if (currentLevel >= maxLevel) {
@@ -113,11 +124,6 @@ export const HideoutModule: React.FC<HideoutModuleProps> = ({
           return false;
         }
       }
-    }
-    
-    // Check PMC level restrictions for the station itself
-    if (!TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)) {
-      return false;
     }
     
     return true;

@@ -36,17 +36,22 @@ export const MaterialSummary: React.FC<MaterialSummaryProps> = ({
     }[] = [];
 
     hideoutModules.forEach(module => {
-      // PMCレベル制限チェック
-      if (!TraderLevelService.isStationAvailableAtPMCLevel(module.name, pmcLevel)) {
-        return;
-      }
-
       const currentLevel = userProgress[module.id] || 0;
       const nextLevel = currentLevel + 1;
 
       // 次のレベルが存在するかチェック
       const nextLevelData = module.levels.find(level => level.level === nextLevel);
       if (!nextLevelData) return;
+
+      // PMCレベル制限チェック（traderRequirementsベース）
+      if (nextLevelData.traderRequirements) {
+        const hasUnmetTraderRequirements = nextLevelData.traderRequirements.some(traderReq => 
+          !TraderLevelService.isTraderLevelAvailable(traderReq.trader, traderReq.level, pmcLevel)
+        );
+        if (hasUnmetTraderRequirements) {
+          return;
+        }
+      }
 
       // 前提条件チェック - userProgressをmodule.idベースに変換
       const userProgressByName: { [stationName: string]: number } = {};
