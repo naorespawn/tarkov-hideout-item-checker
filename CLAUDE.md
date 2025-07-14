@@ -12,6 +12,12 @@ This is a React-TypeScript web application that helps Escape from Tarkov players
 - `npm start` - Start development server (uses CRACO for Tailwind CSS support)
 - `npm run build` - Create production build
 - `npm test` - Run tests in watch mode
+- `npm run test:ci` - Run tests with coverage (CI mode)
+
+### Code Quality
+- `npm run lint` - Run ESLint on TypeScript files
+- `npm run lint:fix` - Run ESLint and auto-fix issues
+- `npm run typecheck` - Run TypeScript compiler checks without emitting files
 
 ### Testing
 - `npx playwright test` - Run end-to-end tests
