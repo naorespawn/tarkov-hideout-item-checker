@@ -121,3 +121,8 @@ The app implements complex dependency chains:
 - `/src/services/hideoutDataService.ts` - Data fetching strategy and caching implementation
 - `/src/services/hideoutPrerequisiteService.ts` - Business logic for module dependencies
 - `/src/types/hideout.ts` - Core type definitions for the entire application
+
+## Workflow Instructions
+
+- **Auto-commit**: Always commit changes automatically after completing tasks unless explicitly told not to
+- **Commit Message Style**: Follow existing pattern with descriptive summary and Claude attribution
