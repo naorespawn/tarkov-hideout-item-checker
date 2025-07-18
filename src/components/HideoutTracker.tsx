@@ -3,7 +3,6 @@ import { HideoutModule } from './HideoutModule';
 import { MaterialSummary } from './MaterialSummary';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { HideoutModule as HideoutModuleType, UserProgress, GameEdition } from '../types/hideout';
-import { TraderLevelService } from '../services/traderLevelService';
 import { HideoutPrerequisiteService } from '../services/hideoutPrerequisiteService';
 import { GameEditionService } from '../services/gameEditionService';
 import { hideoutModules as fallbackData } from '../data/hideoutDataNew';
@@ -22,7 +21,7 @@ export const HideoutTracker: React.FC = () => {
       const initialProgress = GameEditionService.initializeProgressForEdition(gameEdition, hideoutModules);
       setUserProgress(initialProgress);
     }
-  }, [hideoutModules, gameEdition]);
+  }, [hideoutModules, gameEdition, userProgress, setUserProgress]);
 
   const handleLevelChange = (moduleId: string, level: number) => {
     setUserProgress((prev: UserProgress) => ({
