@@ -7,25 +7,25 @@ test.describe('Hideout Tracker', () => {
 
   test('should display the main title and description', async ({ page }) => {
     await expect(page.locator('h1')).toContainText('Escape from Tarkov');
-    await expect(page.locator('h2')).toContainText('Hideout アイテムチェッカー');
-    await expect(page.locator('p')).toContainText('各施設のレベルを設定して、必要な素材を確認しましょう');
+    await expect(page.locator('h2').first()).toContainText('Hideout アイテムチェッカー');
+    await expect(page.locator('p').first()).toContainText('各施設のレベルを設定して、必要な素材を確認しましょう');
   });
 
   test('should display hideout modules', async ({ page }) => {
-    // Wait for modules to load
-    await expect(page.locator('.bg-white.rounded-lg.shadow-md').first()).toBeVisible();
+    // Wait for modules to load - use a more generic selector
+    await expect(page.locator('.rounded-lg.shadow-md.p-6.mb-6').first()).toBeVisible();
     
-    // Check if all modules are displayed (should be 18 total modules)
-    const moduleCount = await page.locator('.bg-white.rounded-lg.shadow-md').count();
-    expect(moduleCount).toBeGreaterThan(15);
+    // Check if all modules are displayed (should be 19 total modules)
+    const moduleCount = await page.locator('.rounded-lg.shadow-md.p-6.mb-6').count();
+    expect(moduleCount).toBeGreaterThanOrEqual(18);
   });
 
   test('should allow changing module levels with buttons', async ({ page }) => {
-    // Find the first module's level controls
-    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
-    const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
-    const decreaseButton = firstModuleCard.locator('button[title="レベルを下げる"]');
-    const levelDisplay = firstModuleCard.locator('span.font-semibold');
+    // Find an accessible module (not grayed out) with level controls
+    const accessibleModuleCard = page.locator('.rounded-lg.shadow-md.p-6.mb-6').filter({ hasNotText: '🔒' }).first();
+    const increaseButton = accessibleModuleCard.locator('button[title="レベルを上げる"]');
+    const decreaseButton = accessibleModuleCard.locator('button[title="レベルを下げる"]');
+    const levelDisplay = accessibleModuleCard.locator('span.font-semibold');
     
     await expect(increaseButton).toBeVisible();
     await expect(decreaseButton).toBeVisible();
@@ -47,7 +47,7 @@ test.describe('Hideout Tracker', () => {
 
   test('should display required items when level is selected', async ({ page }) => {
     // Use button to increase level for the first module
-    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
+    const firstModuleCard = page.locator('.rounded-lg.shadow-md.p-6.mb-6').first();
     const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
     
     await increaseButton.click();
@@ -61,10 +61,10 @@ test.describe('Hideout Tracker', () => {
   });
 
   test('should persist level selection after page reload', async ({ page }) => {
-    // Use button to set level 2 for the first module
-    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
-    const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
-    const levelDisplay = firstModuleCard.locator('span.font-semibold');
+    // Use button to set level 2 for an accessible module
+    const accessibleModuleCard = page.locator('.rounded-lg.shadow-md.p-6.mb-6').filter({ hasNotText: '🔒' }).first();
+    const increaseButton = accessibleModuleCard.locator('button[title="レベルを上げる"]');
+    const levelDisplay = accessibleModuleCard.locator('span.font-semibold');
     
     // Increase to level 2
     await increaseButton.click();
@@ -75,7 +75,8 @@ test.describe('Hideout Tracker', () => {
     await page.reload();
     
     // Verify the selection persists
-    const reloadedLevelDisplay = page.locator('.bg-white.rounded-lg.shadow-md').first().locator('span.font-semibold');
+    const reloadedAccessibleCard = page.locator('.rounded-lg.shadow-md.p-6.mb-6').filter({ hasNotText: '🔒' }).first();
+    const reloadedLevelDisplay = reloadedAccessibleCard.locator('span.font-semibold');
     await expect(reloadedLevelDisplay).toHaveText('2');
   });
 
@@ -84,7 +85,7 @@ test.describe('Hideout Tracker', () => {
     await expect(resetButton).toBeVisible();
     
     // Set a level first using button
-    const firstModuleCard = page.locator('.bg-white.rounded-lg.shadow-md').first();
+    const firstModuleCard = page.locator('.rounded-lg.shadow-md.p-6.mb-6').first();
     const increaseButton = firstModuleCard.locator('button[title="レベルを上げる"]');
     const levelDisplay = firstModuleCard.locator('span.font-semibold');
     
@@ -135,7 +136,7 @@ test.describe('Hideout Tracker', () => {
     await expect(page.locator('select').first()).toBeVisible();
     
     // Check if grid layout adapts properly
-    const moduleCards = page.locator('.bg-white.rounded-lg.shadow-md');
+    const moduleCards = page.locator('.rounded-lg.shadow-md.p-6.mb-6');
     await expect(moduleCards.first()).toBeVisible();
   });
 
