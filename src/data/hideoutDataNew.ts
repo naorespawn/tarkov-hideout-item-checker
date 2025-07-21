@@ -574,11 +574,15 @@ export const hideoutModules: HideoutModule[] = [
         level: 3,
         roubles: 400000,
         requirements: [
+          { item: 'Set of files "Master"', count: 1 },
           { item: 'Printed circuit board', count: 3 },
           { item: 'Bundle of wires', count: 5 },
           { item: 'Metal spare parts', count: 5 },
+          { item: 'Capacitors', count: 5 },
           { item: 'Phase control relay', count: 3 },
-          { item: 'Power cord', count: 5 }
+          { item: 'Power cord', count: 5 },
+          { item: 'Leatherman Multitool', count: 1 },
+          { item: 'Tech manual', count: 1 }
         ]
       }
     ]
