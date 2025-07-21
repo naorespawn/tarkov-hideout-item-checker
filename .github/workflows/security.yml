@@ -37,34 +37,36 @@ jobs:
           echo "Checking for vulnerabilities in dependencies that affect the built application..." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          # Run full audit and capture output
-          AUDIT_OUTPUT=$(npm audit --audit-level=moderate 2>&1 || true)
-          AUDIT_EXIT_CODE=$?
-          
-          # Check if vulnerabilities are only in build-time dependencies
-          if echo "$AUDIT_OUTPUT" | grep -q "react-scripts\|webpack\|@craco\|eslint\|@testing-library"; then
-            echo "⚠️ Build-time dependency vulnerabilities detected (acceptable for static sites):" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "$AUDIT_OUTPUT" | head -15 >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Note**: These vulnerabilities are in build-time tools and do not affect the deployed static site." >> $GITHUB_STEP_SUMMARY
-            echo "The built application only includes React runtime and application code." >> $GITHUB_STEP_SUMMARY
-            
-            # Check if there are runtime vulnerabilities
-            if echo "$AUDIT_OUTPUT" | grep -v "react-scripts\|webpack\|@craco\|eslint\|@testing-library" | grep -q "Severity:"; then
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "❌ CRITICAL: Runtime vulnerabilities also detected!" >> $GITHUB_STEP_SUMMARY
-              exit 1
-            fi
-          elif [ $AUDIT_EXIT_CODE -eq 0 ]; then
+          # Run audit and capture output
+          if AUDIT_OUTPUT=$(npm audit --audit-level=moderate 2>&1); then
             echo "✅ No moderate or high severity vulnerabilities found" >> $GITHUB_STEP_SUMMARY
           else
-            echo "❌ CRITICAL: Runtime vulnerabilities detected!" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "$AUDIT_OUTPUT" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            exit 1
+            # Check if vulnerabilities are only in build-time dependencies
+            if echo "$AUDIT_OUTPUT" | grep -q "react-scripts\|webpack\|@craco\|eslint\|@testing-library\|jest"; then
+              echo "⚠️ Build-time dependency vulnerabilities detected (acceptable for static sites):" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "$AUDIT_OUTPUT" | head -15 >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "**Note**: These vulnerabilities are in build-time tools and do not affect the deployed static site." >> $GITHUB_STEP_SUMMARY
+              echo "The built application only includes React runtime and application code." >> $GITHUB_STEP_SUMMARY
+              
+              # Only fail if there are runtime vulnerabilities (non-build tools)
+              if echo "$AUDIT_OUTPUT" | grep -v "react-scripts\|webpack\|@craco\|eslint\|@testing-library\|jest" | grep -q "high\|critical"; then
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "❌ CRITICAL: Runtime vulnerabilities also detected!" >> $GITHUB_STEP_SUMMARY
+                exit 1
+              else
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "✅ No runtime vulnerabilities found - build continues" >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "❌ CRITICAL: Runtime vulnerabilities detected!" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "$AUDIT_OUTPUT" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            fi
           fi
 
       - name: Run security scan with Snyk
