@@ -300,10 +300,17 @@ export const hideoutModules: HideoutModule[] = [
       {
         level: 3,
         requirements: [
-          { item: 'Nails', count: 12 },
-          { item: 'Metal spare parts', count: 6 },
-          { item: 'Pliers', count: 2 },
-          { item: 'Measuring tape', count: 1 }
+          { item: 'GreenBat lithium battery', count: 5 },
+          { item: 'Power cord', count: 4 },
+          { item: 'Capacitors', count: 5 },
+          { item: 'Bundle of wires', count: 7 }
+        ],
+        traderRequirements: [
+          { trader: 'Skier', level: 3 }
+        ],
+        modulePrerequisites: [
+          { module: 'Generator', level: 3 },
+          { module: 'Heating', level: 3 }
         ]
       }
     ]

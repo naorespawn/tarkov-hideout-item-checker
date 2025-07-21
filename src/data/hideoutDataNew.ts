@@ -413,10 +413,14 @@ export const hideoutModules: HideoutModule[] = [
       },
       {
         level: 3,
-        roubles: 100000,
         requirements: [
+          { item: 'GreenBat lithium battery', count: 5 },
           { item: 'Power cord', count: 4 },
+          { item: 'Capacitors', count: 5 },
           { item: 'Bundle of wires', count: 7 }
+        ],
+        traderRequirements: [
+          { trader: 'Skier', level: 3 }
         ],
         modulePrerequisites: [
           { module: 'Generator', level: 3 },
