@@ -401,9 +401,18 @@ export const hideoutModules: HideoutModule[] = [
       {
         level: 1,
         requirements: [
-          { item: 'Nails', count: 8 },
-          { item: 'Metal spare parts', count: 3 },
-          { item: 'Bolts', count: 6 }
+          { item: 'BakeEzy cook book', count: 1 },
+          { item: 'Slim diary', count: 2 },
+          { item: 'Diary', count: 2 },
+          { item: 'Tech manual', count: 5 },
+          { item: 'Chainlet', count: 2 },
+          { item: 'Horse figurine', count: 1 }
+        ],
+        skillRequirements: [
+          { skill: 'Hideout Management', level: 5 }
+        ],
+        modulePrerequisites: [
+          { module: 'Rest Space', level: 3 }
         ]
       }
     ]
